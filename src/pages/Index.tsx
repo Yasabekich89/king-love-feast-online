@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import InstagramFeed from '@/components/InstagramFeed';
 import ReservationForm from '@/components/ReservationForm';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Crown, Steak, Knife, Fork } from 'lucide-react';
+import { ArrowRight, Crown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Index: React.FC = () => {
@@ -19,7 +19,7 @@ const Index: React.FC = () => {
       description: t('menu.kingRibeye.description'),
       price: t('menu.kingRibeye.price'),
       image: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9',
-      icon: <Steak className="text-brand-gold" />,
+      icon: <Crown className="text-brand-gold" />,
     },
     {
       id: 2,
@@ -27,7 +27,7 @@ const Index: React.FC = () => {
       description: t('menu.crownBurger.description'),
       price: t('menu.crownBurger.price'),
       image: 'https://images.unsplash.com/photo-1493962853295-0fd70327578a',
-      icon: <Knife className="text-brand-gold" />,
+      icon: <Crown className="text-brand-gold" />,
     },
     {
       id: 3,
@@ -35,7 +35,7 @@ const Index: React.FC = () => {
       description: t('menu.royalRack.description'),
       price: t('menu.royalRack.price'),
       image: 'https://images.unsplash.com/photo-1465379944081-7f47de8d74ac',
-      icon: <Fork className="text-brand-gold" />,
+      icon: <Crown className="text-brand-gold" />,
     },
   ];
   
