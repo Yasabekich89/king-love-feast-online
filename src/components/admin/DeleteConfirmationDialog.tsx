@@ -26,7 +26,8 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
 }) => {
   const { t } = useLanguage();
 
-  // Fix: Modify how we handle the onOpenChange event
+  // Handle the Dialog's onOpenChange event
+  // This function expects a single boolean parameter from the Dialog component
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       onClose();
