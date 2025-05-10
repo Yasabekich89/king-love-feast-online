@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { 
@@ -112,28 +111,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
         const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
         const filePath = `${fileName}`;
 
-        // Check if products bucket exists, if not create it
-        const { data: buckets } = await supabase.storage.listBuckets();
-        const productsBucket = buckets?.find(bucket => bucket.name === 'products');
-        
-        if (!productsBucket) {
-          const { error: createBucketError } = await supabase.storage.createBucket('products', {
-            public: true
-          });
-          
-          if (createBucketError) {
-            console.error('Error creating bucket:', createBucketError);
-            toast({
-              title: t('admin.error'),
-              description: 'Failed to create storage bucket: ' + createBucketError.message,
-              variant: 'destructive',
-            });
-            setIsLoading(false);
-            return;
-          }
-        }
-
-        const { error: uploadError, data: uploadData } = await supabase
+        // Direct upload to the existing products bucket - no bucket creation attempt
+        const { error: uploadError } = await supabase
           .storage
           .from('products')
           .upload(filePath, imageFile, {
@@ -145,7 +124,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
           console.error('Upload error:', uploadError);
           toast({
             title: t('admin.error'),
-            description: uploadError.message,
+            description: 'Image upload failed: ' + uploadError.message,
             variant: 'destructive',
           });
           setIsLoading(false);
