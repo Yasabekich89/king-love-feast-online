@@ -1,7 +1,27 @@
 
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Instagram, MapPin, Clock, Phone, Facebook, TikTok } from 'lucide-react';
+import { Instagram, MapPin, Clock, Phone, Facebook } from 'lucide-react';
+
+const TikTokIcon = ({ size = 24, className = '' }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M9 12a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"></path>
+    <path d="M19 8v9a5 5 0 0 1-5 5H8"></path>
+    <path d="M17 10V8h-2"></path>
+    <path d="M17 15V8a5 5 0 0 0-5-5H9"></path>
+  </svg>
+);
 
 const Footer: React.FC = () => {
   const { t } = useLanguage();
@@ -45,7 +65,7 @@ const Footer: React.FC = () => {
                 className="inline-block text-brand-gold hover:text-white transition-colors"
                 aria-label="TikTok"
               >
-                <TikTok size={24} />
+                <TikTokIcon size={24} />
               </a>
             </div>
           </div>
