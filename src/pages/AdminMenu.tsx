@@ -1,44 +1,15 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AdminLayout from '@/components/AdminLayout';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '@/components/ui/table';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle 
-} from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, Edit, Trash2, MoreHorizontal } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import MenuItemsTable from '@/components/admin/MenuItemsTable';
+import MenuFilters from '@/components/admin/MenuFilters';
+import DeleteConfirmationDialog from '@/components/admin/DeleteConfirmationDialog';
 
 // Define the type for menu items
 interface MenuItem {
@@ -181,6 +152,11 @@ const AdminMenu: React.FC = () => {
     }
   };
 
+  const handleCloseDialog = () => {
+    setIsDeleteDialogOpen(false);
+    setSelectedItem(null);
+  };
+
   const filteredItems = menuItems.filter(item => {
     const matchesSearch = item[`title_${language}` as keyof MenuItem]?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.category.toLowerCase().includes(searchTerm.toLowerCase());
@@ -210,155 +186,30 @@ const AdminMenu: React.FC = () => {
         </Button>
       </div>
       
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
-        <div className="w-full sm:w-1/2">
-          <Label htmlFor="search" className="sr-only">
-            {t('admin.search')}
-          </Label>
-          <Input
-            id="search"
-            placeholder={t('admin.searchItems')}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="border-brand-gold/30"
-          />
-        </div>
-        <div className="w-full sm:w-1/2">
-          <Select
-            value={filterCategory}
-            onValueChange={setFilterCategory}
-          >
-            <SelectTrigger className="border-brand-gold/30">
-              <SelectValue placeholder={t('admin.filterByCategory')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="all">{t('admin.allCategories')}</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {t(`menu.category.${category}`)}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      <MenuFilters 
+        searchTerm={searchTerm}
+        filterCategory={filterCategory}
+        categories={categories}
+        onSearchChange={setSearchTerm}
+        onCategoryChange={setFilterCategory}
+      />
       
-      <div className="border rounded-md overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">{t('admin.image')}</TableHead>
-              <TableHead>{t('admin.name')}</TableHead>
-              <TableHead>{t('admin.category')}</TableHead>
-              <TableHead>{t('admin.price')}</TableHead>
-              <TableHead>{t('admin.status')}</TableHead>
-              <TableHead className="w-[100px]">{t('admin.actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
-                  {t('admin.loading')}
-                </TableCell>
-              </TableRow>
-            ) : filteredItems.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
-                  {t('admin.noItemsFound')}
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredItems.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>
-                    <div className="w-12 h-12 rounded-md overflow-hidden">
-                      <img 
-                        src={item.imageSrc} 
-                        alt={item[`title_${language}` as keyof MenuItem]?.toString() || ''} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {item[`title_${language}` as keyof MenuItem]?.toString() || ''}
-                  </TableCell>
-                  <TableCell>
-                    {t(`menu.category.${item.category}`)}
-                  </TableCell>
-                  <TableCell>
-                    {item[`price_${language}` as keyof MenuItem]?.toString() || ''}
-                  </TableCell>
-                  <TableCell>
-                    {item.isPopular ? (
-                      <Badge className="bg-brand-gold hover:bg-brand-gold/80">
-                        {t('admin.popular')}
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline">
-                        {t('admin.regular')}
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">{t('admin.openMenu')}</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleEditItem(item)}>
-                          <Edit className="mr-2 h-4 w-4" />
-                          {t('admin.edit')}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => handleDeleteClick(item)}
-                          className="text-red-600 focus:text-red-600"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          {t('admin.delete')}
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <MenuItemsTable 
+        items={filteredItems}
+        loading={loading}
+        language={language}
+        onEdit={handleEditItem}
+        onDelete={handleDeleteClick}
+      />
       
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('admin.confirmDelete')}</DialogTitle>
-            <DialogDescription>
-              {t('admin.deleteConfirmMessage', { 
-                item: selectedItem?.[`title_${language}` as keyof MenuItem]?.toString() || '' 
-              })}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsDeleteDialogOpen(false)}
-            >
-              {t('admin.cancel')}
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={confirmDelete}
-            >
-              {t('admin.delete')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {selectedItem && (
+        <DeleteConfirmationDialog 
+          isOpen={isDeleteDialogOpen}
+          itemName={selectedItem[`title_${language}` as keyof MenuItem]?.toString() || ''}
+          onClose={handleCloseDialog}
+          onConfirm={confirmDelete}
+        />
+      )}
     </AdminLayout>
   );
 };
