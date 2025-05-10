@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { 
@@ -106,31 +107,67 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
     // Upload image if there's a new file
     if (imageFile) {
-      const fileExt = imageFile.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `${fileName}`;
+      try {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `${fileName}`;
 
-      const { error: uploadError, data: uploadData } = await supabase
-        .storage
-        .from('products')
-        .upload(filePath, imageFile);
+        // Check if products bucket exists, if not create it
+        const { data: buckets } = await supabase.storage.listBuckets();
+        const productsBucket = buckets?.find(bucket => bucket.name === 'products');
+        
+        if (!productsBucket) {
+          const { error: createBucketError } = await supabase.storage.createBucket('products', {
+            public: true
+          });
+          
+          if (createBucketError) {
+            console.error('Error creating bucket:', createBucketError);
+            toast({
+              title: t('admin.error'),
+              description: 'Failed to create storage bucket: ' + createBucketError.message,
+              variant: 'destructive',
+            });
+            setIsLoading(false);
+            return;
+          }
+        }
 
-      if (uploadError) {
+        const { error: uploadError, data: uploadData } = await supabase
+          .storage
+          .from('products')
+          .upload(filePath, imageFile, {
+            cacheControl: '3600',
+            upsert: true
+          });
+
+        if (uploadError) {
+          console.error('Upload error:', uploadError);
+          toast({
+            title: t('admin.error'),
+            description: uploadError.message,
+            variant: 'destructive',
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        const { data: { publicUrl } } = supabase
+          .storage
+          .from('products')
+          .getPublicUrl(filePath);
+
+        imagePath = publicUrl;
+      } catch (error: any) {
+        console.error('Image upload error:', error);
         toast({
           title: t('admin.error'),
-          description: uploadError.message,
+          description: 'Image upload failed: ' + error.message,
           variant: 'destructive',
         });
         setIsLoading(false);
         return;
       }
-
-      const { data: { publicUrl } } = supabase
-        .storage
-        .from('products')
-        .getPublicUrl(filePath);
-
-      imagePath = publicUrl;
     }
 
     const productData = {
@@ -174,6 +211,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       
       onSuccess();
     } catch (error: any) {
+      console.error('Product save error:', error);
       toast({
         title: t('admin.error'),
         description: error.message,
