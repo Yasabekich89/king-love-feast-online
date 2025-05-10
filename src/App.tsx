@@ -10,6 +10,8 @@ import NotFound from "./pages/NotFound";
 import Reservations from "./pages/Reservations";
 import Contact from "./pages/Contact";
 import Menu from "./pages/Menu";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminLayout from "./components/admin/AdminLayout";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +27,13 @@ const App = () => (
             <Route path="/reservations" element={<Reservations />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/menu" element={<Menu />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminProducts />} />
+              <Route path="products" element={<AdminProducts />} />
+            </Route>
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
