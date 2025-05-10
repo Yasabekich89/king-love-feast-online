@@ -23,7 +23,7 @@ const loadInstagramEmbedScript = () => {
 };
 
 const InstagramFeed: React.FC = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Load Instagram embed script when component mounts
