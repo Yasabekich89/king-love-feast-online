@@ -1,10 +1,10 @@
+
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import InstagramFeed from '@/components/InstagramFeed';
 import ReservationForm from '@/components/ReservationForm';
-import RandomMenuItems from '@/components/RandomMenuItems';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Crown } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -122,9 +122,6 @@ const Index: React.FC = () => {
           </div>
         </div>
       </section>
-      
-      {/* Random Menu Items Section */}
-      <RandomMenuItems />
       
       {/* About Section */}
       <section className="py-20 royal-bg text-white">
