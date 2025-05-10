@@ -8,6 +8,7 @@ import ReservationForm from '@/components/ReservationForm';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Crown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Card, CardContent } from '@/components/ui/card';
 
 const Index: React.FC = () => {
   const { t } = useLanguage();
@@ -44,7 +45,7 @@ const Index: React.FC = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative h-[80vh] min-h-[500px] flex items-center">
+      <section className="relative h-[90vh] min-h-[600px] flex items-center">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9"
@@ -54,17 +55,19 @@ const Index: React.FC = () => {
           <div className="absolute inset-0 hero-overlay"></div>
         </div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <div className="max-w-3xl mx-auto text-white">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
+          <div className="max-w-3xl mx-auto text-white hero-content">
+            <Crown className="mx-auto text-brand-gold mb-6" size={60} />
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-white">
               {t('hero.title')}
             </h1>
-            <p className="text-xl md:text-2xl mb-8">{t('hero.subtitle')}</p>
+            <div className="gold-divider"></div>
+            <p className="text-xl md:text-2xl mb-10 opacity-90">{t('hero.subtitle')}</p>
             <Button 
               asChild
-              className="bg-brand-gold hover:bg-brand-blue text-white border-2 border-brand-gold hover:border-brand-blue transition-all duration-300 text-lg px-8 py-6"
+              className="royal-btn bg-brand-gold hover:bg-brand-blue text-white border-2 border-brand-gold hover:border-brand-blue transition-all duration-300 text-lg px-8 py-6 rounded-md shadow-lg"
             >
               <Link to="/reservations">
-                {t('hero.cta')}
+                <span>{t('hero.cta')}</span>
               </Link>
             </Button>
           </div>
@@ -72,47 +75,48 @@ const Index: React.FC = () => {
       </section>
       
       {/* Featured Menu Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
+      <section className="py-20 crown-pattern">
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
-            <Crown className="mx-auto text-brand-gold mb-4" size={32} />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('menu.title')}</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">{t('menu.subtitle')}</p>
+            <Crown className="mx-auto text-brand-gold mb-4" size={40} />
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">{t('menu.title')}</h2>
+            <div className="gold-divider"></div>
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">{t('menu.subtitle')}</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
             {featuredMenuItems.map((item) => (
-              <div key={item.id} className="menu-item bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="h-48 overflow-hidden">
+              <Card key={item.id} className="menu-card overflow-hidden rounded-lg">
+                <div className="h-60 overflow-hidden">
                   <img 
                     src={item.image} 
                     alt={item.name} 
                     className="w-full h-full object-cover menu-item-image"
                   />
                 </div>
-                <div className="p-6">
-                  <div className="flex items-center mb-2">
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-3">
                     {item.icon}
-                    <h3 className="text-xl font-bold ml-2 text-brand-blue">{item.name}</h3>
+                    <h3 className="text-2xl font-bold ml-2 text-brand-blue">{item.name}</h3>
                   </div>
-                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <p className="text-gray-600 mb-4 text-base">{item.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-xl font-bold text-brand-gold">{item.price}</span>
+                    <span className="text-2xl font-bold text-brand-gold">{item.price}</span>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
           
-          <div className="text-center mt-10">
+          <div className="text-center mt-12">
             <Button 
               asChild
               variant="outline" 
-              className="border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white"
+              className="royal-btn border-2 border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white px-6 py-3 rounded-md text-lg"
             >
               <Link to="/menu" className="inline-flex items-center">
-                {t('menu.viewAll')}
-                <ArrowRight size={16} className="ml-2" />
+                <span>{t('menu.viewAll')}</span>
+                <ArrowRight size={20} className="ml-2" />
               </Link>
             </Button>
           </div>
@@ -120,26 +124,28 @@ const Index: React.FC = () => {
       </section>
       
       {/* About Section */}
-      <section className="py-16 royal-bg text-white">
+      <section className="py-20 royal-bg text-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-8 md:mb-0">
+            <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10">
               <img 
                 src="https://images.unsplash.com/photo-1465379944081-7f47de8d74ac" 
                 alt="About Kings Love Meat" 
-                className="w-full h-[400px] object-cover rounded-lg shadow-lg"
+                className="w-full h-[450px] object-cover rounded-lg shadow-2xl"
               />
             </div>
-            <div className="md:w-1/2 md:pl-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-brand-gold">{t('about.title')}</h2>
-              <p className="text-lg mb-6">{t('about.content')}</p>
+            <div className="md:w-1/2 md:pl-10">
+              <Crown className="text-brand-gold mb-4" size={36} />
+              <h2 className="text-3xl md:text-5xl font-bold mb-6 text-brand-gold">{t('about.title')}</h2>
+              <div className="h-1 w-20 bg-brand-gold mb-6"></div>
+              <p className="text-lg mb-8 leading-relaxed">{t('about.content')}</p>
               <Button 
                 asChild
-                className="bg-brand-gold hover:bg-white hover:text-brand-blue text-white transition-colors"
+                className="royal-btn bg-brand-gold hover:bg-white hover:text-brand-blue text-white transition-colors px-8 py-3 rounded-md text-lg"
               >
                 <Link to="/about" className="inline-flex items-center">
-                  {t('about.more')}
-                  <ArrowRight size={16} className="ml-2" />
+                  <span>{t('about.more')}</span>
+                  <ArrowRight size={20} className="ml-2" />
                 </Link>
               </Button>
             </div>
@@ -151,10 +157,17 @@ const Index: React.FC = () => {
       <InstagramFeed />
       
       {/* Reservation Section */}
-      <section className="py-16 bg-gray-100">
+      <section className="py-20 bg-gray-100 crown-pattern">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <ReservationForm />
+          <div className="max-w-3xl mx-auto relative z-10">
+            <div className="text-center mb-10">
+              <Crown className="mx-auto text-brand-gold mb-4" size={32} />
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('reservation.title')}</h2>
+              <div className="gold-divider"></div>
+            </div>
+            <div className="bg-white rounded-lg shadow-xl p-8 border border-gray-200">
+              <ReservationForm />
+            </div>
           </div>
         </div>
       </section>
