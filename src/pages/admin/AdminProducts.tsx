@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 // Type for products
-type Product = Tables['products'];
+type Product = Tables<'products'>;
 
 const AdminProducts = () => {
   const { t } = useLanguage();

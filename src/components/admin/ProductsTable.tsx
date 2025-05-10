@@ -15,7 +15,7 @@ import {
 import { Edit, Trash2 } from 'lucide-react';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 
-type Product = Tables['products'];
+type Product = Tables<'products'>;
 
 interface ProductsTableProps {
   products: Product[];

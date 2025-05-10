@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -11,7 +10,7 @@ import { Tables } from '@/integrations/supabase/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Type for products
-type Product = Tables['products'];
+type Product = Tables<'products'>;
 
 const Menu: React.FC = () => {
   const { t } = useLanguage();

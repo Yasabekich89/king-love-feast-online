@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { 
@@ -27,7 +26,7 @@ import { Label } from '@/components/ui/label';
 import { X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
-type Product = Tables['products'];
+type Product = Tables<'products'>;
 
 interface ProductFormProps {
   product?: Product;
