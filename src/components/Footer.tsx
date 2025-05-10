@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Instagram, MapPin, Clock, Phone } from 'lucide-react';
+import { Instagram, MapPin, Clock, Phone, Facebook, TikTok } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const { t } = useLanguage();
@@ -19,14 +19,33 @@ const Footer: React.FC = () => {
             <p className="text-gray-300 max-w-xs">
               Premium meat restaurant serving royal flavors and exceptional dining experiences.
             </p>
-            <div className="mt-4">
+            <div className="mt-4 flex space-x-3">
+              <a 
+                href="https://www.facebook.com/profile.php?id=61575575482533" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block text-brand-gold hover:text-white transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook size={24} />
+              </a>
               <a 
                 href="https://www.instagram.com/kingslovemeat" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-block text-brand-gold hover:text-white transition-colors"
+                aria-label="Instagram"
               >
                 <Instagram size={24} />
+              </a>
+              <a 
+                href="https://www.tiktok.com/@kings.love.meat" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block text-brand-gold hover:text-white transition-colors"
+                aria-label="TikTok"
+              >
+                <TikTok size={24} />
               </a>
             </div>
           </div>

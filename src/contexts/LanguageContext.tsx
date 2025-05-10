@@ -44,6 +44,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Instagram section
     'instagram.title': 'Follow Our Royal Journey',
     'instagram.subtitle': 'Latest from @kingslovemeat',
+    'instagram.followUs': 'Follow us on Instagram',
     
     // About section
     'about.title': 'Our Royal Heritage',
@@ -61,8 +62,22 @@ const translations: Record<Language, Record<string, string>> = {
     'reservation.submit': 'Confirm Reservation',
     'reservation.success': 'Your reservation has been sent. We will confirm shortly.',
     
+    // Contact page
+    'contact.title': 'Contact Us',
+    'contact.subtitle': 'We would be delighted to hear from you',
+    'contact.infoTitle': 'Contact Information',
+    'contact.phone': 'Phone & WhatsApp',
+    'contact.phoneDesc': 'Call us directly or message us on WhatsApp',
+    'contact.address': 'Our Address',
+    'contact.findUs': 'Visit us for an exceptional dining experience',
+    'contact.hours': 'Opening Hours',
+    'contact.hoursDetails': 'Monday - Sunday: 12:00PM - 11:00PM',
+    'contact.socialTitle': 'Connect With Us',
+    'contact.socialFollow': 'Follow us on social media for exclusive updates and offers',
+    'contact.findUsMap': 'Find Us On The Map',
+    
     // Footer
-    'footer.address': '15 Royal Avenue, Yerevan, Armenia',
+    'footer.address': '38 Tumanyan St, Yerevan, Armenia',
     'footer.hours': 'Open: Mon-Sun 12:00PM - 11:00PM',
     'footer.rights': 'All Rights Reserved',
   },
@@ -101,6 +116,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Instagram section
     'instagram.title': 'Հետևեք մեր թագավորական ճանապարհին',
     'instagram.subtitle': 'Վերջինները @kingslovemeat-ից',
+    'instagram.followUs': 'Հետևեք մեզ Instagram-ում',
     
     // About section
     'about.title': 'Մեր թագավորական ժառանգությունը',
@@ -118,8 +134,22 @@ const translations: Record<Language, Record<string, string>> = {
     'reservation.submit': 'Հաստատել ամրագրումը',
     'reservation.success': 'Ձեր ամրագրումն ուղարկվել է: Մենք շուտով կհաստատենք:',
     
+    // Contact page
+    'contact.title': 'Կապվեք մեզ հետ',
+    'contact.subtitle': 'Մենք ուրախ կլինենք լսել ձեզանից',
+    'contact.infoTitle': 'Կոնտակտային տվյալներ',
+    'contact.phone': 'Հեռախոս և WhatsApp',
+    'contact.phoneDesc': 'Զանգահարեք մեզ կամ գրեք WhatsApp-ով',
+    'contact.address': 'Մեր հասցեն',
+    'contact.findUs': 'Այցելեք մեզ բացառիկ ճաշակման փորձառության համար',
+    'contact.hours': 'Աշխատանքային ժամեր',
+    'contact.hoursDetails': 'Երկուշաբթի - Կիրակի: 12:00 - 23:00',
+    'contact.socialTitle': 'Կապվեք մեզ հետ',
+    'contact.socialFollow': 'Հետևեք մեզ սոցիալական ցանցերում բացառիկ թարմացումների և առաջարկների համար',
+    'contact.findUsMap': 'Գտեք մեզ քարտեզի վրա',
+    
     // Footer
-    'footer.address': 'Թագավորական պողոտա 15, Երևան, Հայաստան',
+    'footer.address': 'Թումանյան փող. 38, Երևան, Հայաստան',
     'footer.hours': 'Բաց է՝ Երկ-Կիր 12:00 - 23:00',
     'footer.rights': 'Բոլոր իրավունքները պաշտպանված են',
   },
@@ -158,6 +188,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Instagram section
     'instagram.title': 'Следите за нашим королевским путешествием',
     'instagram.subtitle': 'Последние новости от @kingslovemeat',
+    'instagram.followUs': 'Подписывайтесь на наш Instagram',
     
     // About section
     'about.title': 'Наше королевское наследие',
@@ -175,8 +206,22 @@ const translations: Record<Language, Record<string, string>> = {
     'reservation.submit': 'Подтвердить бронирование',
     'reservation.success': 'Ваше бронирование отправлено. Мы скоро подтвердим.',
     
+    // Contact page
+    'contact.title': 'Свяжитесь с нами',
+    'contact.subtitle': 'Мы будем рады услышать вас',
+    'contact.infoTitle': 'Контактная информация',
+    'contact.phone': 'Телефон и WhatsApp',
+    'contact.phoneDesc': 'Позвоните нам или напишите в WhatsApp',
+    'contact.address': 'Наш адрес',
+    'contact.findUs': 'Посетите нас для исключительного гастрономического опыта',
+    'contact.hours': 'Часы работы',
+    'contact.hoursDetails': 'Понедельник - Воскресенье: 12:00 - 23:00',
+    'contact.socialTitle': 'Присоединяйтесь к нам',
+    'contact.socialFollow': 'Подписывайтесь на наши социальные сети для эксклюзивных обновлений и предложений',
+    'contact.findUsMap': 'Найдите нас на карте',
+    
     // Footer
-    'footer.address': 'Королевский проспект 15, Ереван, Армения',
+    'footer.address': 'ул. Туманяна 38, Ереван, Армения',
     'footer.hours': 'Открыто: Пн-Вс 12:00 - 23:00',
     'footer.rights': 'Все права защищены',
   },
