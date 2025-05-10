@@ -340,7 +340,7 @@ const AdminMenu: React.FC = () => {
             <DialogTitle>{t('admin.confirmDelete')}</DialogTitle>
             <DialogDescription>
               {t('admin.deleteConfirmMessage', { 
-                item: selectedItem?.[`title_${language}` as keyof MenuItem]?.toString() || ''
+                item: selectedItem?.[`title_${language}` as keyof MenuItem]?.toString() || '' 
               })}
             </DialogDescription>
           </DialogHeader>
