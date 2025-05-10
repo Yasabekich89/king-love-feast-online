@@ -10,11 +10,6 @@ import NotFound from "./pages/NotFound";
 import Reservations from "./pages/Reservations";
 import Contact from "./pages/Contact";
 import Menu from "./pages/Menu";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminMenu from "./pages/AdminMenu";
-import AdminCreateMenuItem from "./pages/AdminCreateMenuItem";
-import AdminEditMenuItem from "./pages/AdminEditMenuItem";
 
 const queryClient = new QueryClient();
 
@@ -30,14 +25,6 @@ const App = () => (
             <Route path="/reservations" element={<Reservations />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/menu" element={<Menu />} />
-            
-            {/* Admin Routes */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/menu" element={<AdminMenu />} />
-            <Route path="/admin/menu/create" element={<AdminCreateMenuItem />} />
-            <Route path="/admin/menu/edit/:id" element={<AdminEditMenuItem />} />
-            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
