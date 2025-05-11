@@ -20,12 +20,13 @@ const Reservations: React.FC = () => {
       <BackgroundBoxesDemo />
       
       {/* Reservation Form Section */}
-      <section className="py-16 bg-gray-100 flex-grow relative overflow-hidden">
-        {/* Decorative background elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-          <div className="absolute -top-10 -left-10 w-40 h-40 bg-brand-gold/5 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 -right-20 w-60 h-60 bg-brand-blue/5 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-20 left-1/3 w-80 h-80 bg-brand-gold/5 rounded-full blur-3xl"></div>
+      <section className="py-16 bg-gray-100 flex-grow relative overflow-visible">
+        {/* Decorative background elements - Extended positioning and sizing */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-visible z-0">
+          <div className="absolute -top-20 -left-20 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 -right-32 w-80 h-80 bg-brand-blue/5 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-brand-gold/5 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-24 right-1/4 w-72 h-72 bg-brand-blue/5 rounded-full blur-3xl"></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
@@ -77,6 +78,9 @@ const Reservations: React.FC = () => {
             </motion.div>
           </div>
         </div>
+        
+        {/* Add additional padding at the bottom to ensure all animations are visible */}
+        <div className="h-32"></div>
       </section>
       
       <Footer />
