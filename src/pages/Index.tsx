@@ -5,7 +5,6 @@ import Footer from '@/components/Footer';
 import InstagramFeed from '@/components/InstagramFeed';
 import HeroSection from '@/components/sections/HeroSection';
 import FeaturedMenuSection from '@/components/sections/FeaturedMenuSection';
-import GravitySection from '@/components/sections/GravitySection';
 import ReservationSection from '@/components/sections/ReservationSection';
 import { motion, useScroll, useSpring } from 'framer-motion';
 
@@ -32,9 +31,6 @@ const Index: React.FC = () => {
       
       {/* Featured Menu Section */}
       <FeaturedMenuSection />
-      
-      {/* About Section - Gravity animation */}
-      <GravitySection />
       
       {/* Instagram Feed Section */}
       <InstagramFeed />
