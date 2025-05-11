@@ -18,8 +18,10 @@ export const hasPerformanceLimitations = (): boolean => {
   // Check for low-end devices (approximation)
   const hasLimitedCPU = navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency <= 4;
   
-  // Check for data saver mode
-  const isDataSaverOn = navigator.connection && (navigator.connection as any).saveData === true;
+  // Check for data saver mode - safely access connection API
+  const isDataSaverOn = 
+    'connection' in navigator && 
+    (navigator as any).connection?.saveData === true;
   
   return isMobile || prefersReducedMotion || hasLimitedCPU || isDataSaverOn;
 };
