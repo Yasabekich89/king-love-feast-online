@@ -1,11 +1,11 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import InstagramFeed from '@/components/InstagramFeed';
-import HeroSection from '@/components/sections/HeroSection';
 import FeaturedMenuSection from '@/components/sections/FeaturedMenuSection';
 import ReservationSection from '@/components/sections/ReservationSection';
+import HeroGallerySection from '@/components/sections/HeroGallerySection';
 import { motion, useScroll, useSpring } from 'framer-motion';
 
 const Index: React.FC = () => {
@@ -26,8 +26,8 @@ const Index: React.FC = () => {
       
       <Header />
       
-      {/* Hero Section */}
-      <HeroSection />
+      {/* Hero Gallery Section */}
+      <HeroGallerySection />
       
       {/* Featured Menu Section */}
       <FeaturedMenuSection />
