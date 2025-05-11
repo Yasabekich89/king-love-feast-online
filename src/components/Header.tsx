@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Crown, Menu, X } from 'lucide-react';
+import { Crown, X, Beef } from 'lucide-react';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -90,13 +90,13 @@ const Header: React.FC = () => {
             </DropdownMenu>
           </div>
 
-          {/* Mobile menu button with pulse animation */}
+          {/* Mobile menu button with Beef icon and pulse animation */}
           <button 
             className={`md:hidden text-brand-blue hover:text-brand-gold relative ${pulseMenu ? 'animate-pulse-gold' : ''}`}
             onClick={toggleMenu}
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? <X size={24} /> : <Beef size={24} />}
             <span className="absolute -top-1 -right-1 w-2 h-2 bg-brand-gold rounded-full hidden"></span>
           </button>
         </div>
@@ -153,9 +153,8 @@ const Header: React.FC = () => {
                 <div className="absolute left-1/2 top-0 -mt-2 -ml-2 w-4 h-4 rounded-full bg-brand-gold opacity-20"></div>
               </div>
               
-              {/* Enhanced Mobile language switcher */}
+              {/* Enhanced Mobile language switcher with removed title text */}
               <div className="mt-auto mb-8">
-                <h3 className="text-sm font-medium text-gray-500 mb-3">{t('nav.selectLanguage')} 🌐</h3>
                 <div className="flex justify-between space-x-2">
                   <button 
                     className={`language-button-fancy ${language === 'en' ? 'active' : ''}`}
