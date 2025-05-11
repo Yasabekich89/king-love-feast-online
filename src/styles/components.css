@@ -5,8 +5,8 @@
   overflow: hidden;
   border-radius: 0.5rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  width: 100%;
   max-width: 100%;
+  width: 100%;
 }
 
 .instagram-post-container:hover {
@@ -15,8 +15,9 @@
 
 .instagram-media {
   transition: all 0.3s ease !important;
-  width: 100% !important;
   max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
 }
 
 @media (max-width: 768px) {
@@ -34,7 +35,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 100%;
+  max-width: 100%;
 }
 
 .instagram-placeholder .instagram-icon {
@@ -48,7 +49,6 @@
   width: 100% !important;
   min-height: 500px;
   max-width: 100% !important;
-  margin: 0 auto !important;
 }
 
 @media (max-width: 640px) {
@@ -79,4 +79,19 @@
 
 .menu-item:hover .menu-item-image {
   transform: scale(1.05);
+}
+
+/* Mobile-specific fixes */
+@media (max-width: 767px) {
+  .menu-item, 
+  .menu-card, 
+  .instagram-post-container {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .grid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

@@ -1,71 +1,72 @@
 
-/* Responsive fixes to prevent horizontal overflow without breaking animations */
+/* Responsive fixes to prevent horizontal scrolling */
 
-/* Global fixes for overflow containers */
-.container {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* Target specific sections that need overflow handling (excluding hero section) */
-section:not(.h-[350vh]) {
+/* Add targeted overflow protection but exempt animation containers */
+html, body, #root {
   overflow-x: hidden;
   width: 100%;
+  position: relative;
 }
 
-/* Fix for Instagram embeds */
-.instagram-media {
-  max-width: 100% !important;
-  width: 100% !important;
-  margin: 0 auto !important;
-}
-
-.instagram-post-container {
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-/* Fix carousel items from overflowing */
-.embla {
-  overflow: hidden;
-}
-
-.embla__container {
-  display: flex;
-}
-
-.embla__slide {
-  flex: 0 0 100%;
-  min-width: 0;
-}
-
-/* Ensure all images are contained */
+/* Make all images responsive */
 img {
   max-width: 100%;
   height: auto;
 }
 
-/* Fix card layout on mobile */
-.menu-card {
-  max-width: 100%;
+/* Ensure iframes are responsive */
+iframe {
+  max-width: 100% !important;
+}
+
+/* Fix Instagram embeds on mobile */
+.instagram-media {
+  min-width: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border-width: 0 !important;
+}
+
+/* Ensure content containers respect viewport width */
+.container {
   width: 100%;
-}
-
-/* More specific fixes for carousel content */
-.CarouselItem {
   max-width: 100%;
+  box-sizing: border-box;
 }
 
-/* Fix for mobile padding */
-@media (max-width: 768px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  .px-4 {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+/* Fix grid overflow issues */
+.grid {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Ensure all sections are contained except hero animations */
+section:not(.h-[350vh]) {
+  overflow-x: hidden;
+}
+
+/* Fix image galleries and carousels */
+.BentoGrid, .BentoCell {
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+/* Special Instagram feed fixes */
+#instagram-section .instagram-post-container {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Ensure carousel items don't cause horizontal scroll */
+.embla {
+  overflow: hidden;
+}
+
+/* Ensure Contact page map container is responsive */
+.contact-map-container {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }

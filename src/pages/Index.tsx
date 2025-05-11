@@ -31,24 +31,29 @@ const Index: React.FC = () => {
       
       <Header />
       
-      {/* Hero Gallery Section - Critical for first render */}
-      <HeroGallerySection />
+      {/* Hero Gallery Section - Critical for first render - allowed to overflow for animation */}
+      <div className="w-full">
+        <HeroGallerySection />
+      </div>
       
-      {/* Container for the rest of the content with overflow handling */}
-      <div className="overflow-hidden w-full">
-        {/* Lazy load non-critical sections */}
+      {/* Lazy load non-critical sections - with overflow protection */}
+      <div className="w-full overflow-hidden">
         <Suspense fallback={<div className="py-16 flex justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
         </div>}>
           <FeaturedMenuSection />
         </Suspense>
-        
+      </div>
+      
+      <div className="w-full overflow-hidden">
         <Suspense fallback={<div className="py-16 flex justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
         </div>}>
           <InstagramFeed />
         </Suspense>
-        
+      </div>
+      
+      <div className="w-full overflow-hidden">
         <Suspense fallback={<div className="py-16 flex justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
         </div>}>

@@ -44,16 +44,16 @@ const MenuCard: React.FC<MenuItemProps> = ({
   return (
     <div 
       id={id}
-      className="menu-card overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 h-full flex flex-col w-full max-w-full"
+      className="menu-card overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 h-full flex flex-col"
     >
-      <div className="p-4 pb-0 w-full">
-        <div className="relative bg-gray-50 rounded-lg overflow-hidden w-full">
+      <div className="p-4 pb-0">
+        <div className="relative bg-gray-50 rounded-lg overflow-hidden">
           <AspectRatio ratio={4/3} className="w-full">
             <OptimizedImage 
               src={imageSrc} 
               alt={t(titleKey)} 
               className="w-full h-full object-contain p-2" 
-              containerClassName="flex items-center justify-center w-full" 
+              containerClassName="flex items-center justify-center" 
             />
             {isPopular && (
               <div className="absolute top-4 right-4">
@@ -66,7 +66,7 @@ const MenuCard: React.FC<MenuItemProps> = ({
         </div>
       </div>
       
-      <div className="p-4 flex-grow flex flex-col w-full">
+      <div className="p-4 flex-grow flex flex-col">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-xl font-serif text-brand-blue">{t(titleKey)}</h3>
           <span className="text-lg font-bold text-brand-gold">{t(priceKey)}</span>
