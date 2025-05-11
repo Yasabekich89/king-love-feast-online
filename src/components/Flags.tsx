@@ -44,3 +44,10 @@ export const FlagAM: React.FC<FlagProps> = ({ className }) => (
     <path fill="#f2a800" d="M0 320h640v160H0z"/>
   </svg>
 );
+
+// Create an object with all flag components for easier access
+export const Flags = {
+  en: FlagUS,
+  ru: FlagRU,
+  am: FlagAM,
+};

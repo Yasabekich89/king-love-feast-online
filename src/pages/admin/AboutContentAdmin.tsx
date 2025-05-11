@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/language';
 import { useAboutContent, useUpdateAboutContent } from '@/hooks/use-about-content';
