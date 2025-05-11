@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
-import { zoomIn, containerVariants, itemVariants, floatingAnimation } from '@/lib/animation-variants';
+import { zoomIn, containerVariants, itemVariants } from '@/lib/animation-variants';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
 const GravitySection: React.FC = () => {
@@ -43,6 +43,17 @@ const GravitySection: React.FC = () => {
     scale: 1.1,
     boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
     transition: { type: "spring", stiffness: 400, damping: 10 }
+  };
+
+  // Define the floating animation directly instead of using the variant
+  const floatingAnimation = {
+    y: [0, -10, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      repeatType: "reverse",
+      ease: "easeInOut",
+    }
   };
   
   return (
@@ -148,7 +159,7 @@ const GravitySection: React.FC = () => {
                       whileHover={bubbleHover}
                       whileTap={{ scale: 0.95 }}
                       variants={itemVariants}
-                      animate={floatingAnimation.animate}
+                      animate={floatingAnimation}
                     >
                       {content}
                       <motion.span

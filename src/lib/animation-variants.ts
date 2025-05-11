@@ -82,20 +82,6 @@ export const letterVariants: Variants = {
   }
 };
 
-// Floating animation
-export const floatingAnimation: Variants = {
-  initial: { y: 0 },
-  animate: {
-    y: [0, -10, 0],
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      repeatType: "reverse",
-      ease: "easeInOut",
-    }
-  }
-};
-
 // Magnetic button hover effect
 export const magneticHover = (e: React.MouseEvent<HTMLElement>, ref: React.RefObject<HTMLElement>) => {
   if (!ref.current) return;
