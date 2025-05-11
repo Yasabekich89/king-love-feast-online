@@ -22,6 +22,7 @@ const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const AdminProducts = lazy(() => import("./pages/admin/AdminProducts"));
 const MeatTypesAdmin = lazy(() => import("./pages/admin/MeatTypesAdmin"));
+const AboutContentAdmin = lazy(() => import("./pages/admin/AboutContentAdmin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,6 +56,7 @@ const App = () => (
                   <Route index element={<AdminProducts />} />
                   <Route path="products" element={<AdminProducts />} />
                   <Route path="meat-types" element={<MeatTypesAdmin />} />
+                  <Route path="about" element={<AboutContentAdmin />} />
                 </Route>
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

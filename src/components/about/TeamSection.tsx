@@ -3,17 +3,38 @@ import React from "react";
 import { motion } from "framer-motion";
 import { fadeIn, containerVariants, itemVariants } from "@/lib/animation-variants";
 import { Card, CardContent } from "@/components/ui/card";
-
-// Team member type
-type TeamMember = {
-  name: string;
-  role: string;
-  bio: string;
-};
+import { useLanguage } from "@/contexts/language";
+import { useAboutContent } from "@/hooks/use-about-content";
+import { TeamMember } from "@/types/about-content";
 
 const TeamSection = () => {
-  // Team members data
-  const teamMembers: TeamMember[] = [
+  const { language } = useLanguage();
+  const { data } = useAboutContent(language);
+
+  // Get team content or use fallback
+  const teamContent = data?.team || {
+    title: "Meet Our Team",
+    members: [
+      {
+        name: "Alexander King",
+        role: "Executive Chef",
+        bio: "With over 15 years of experience in premium steakhouses across Europe, Alex brings exceptional culinary expertise to every dish."
+      },
+      {
+        name: "Isabella Royal",
+        role: "Restaurant Manager",
+        bio: "Isabella ensures every guest receives the royal treatment with her impeccable attention to detail and hospitality expertise."
+      },
+      {
+        name: "Michael Stone",
+        role: "Head Butcher",
+        bio: "A third-generation butcher, Michael selects only the finest cuts of meat, ensuring premium quality in every serving."
+      }
+    ]
+  };
+
+  // Use default members if none exist in the database
+  const members = teamContent.members.length > 0 ? teamContent.members : [
     {
       name: "Alexander King",
       role: "Executive Chef",
@@ -41,7 +62,7 @@ const TeamSection = () => {
           viewport={{ once: true }}
           variants={fadeIn}
         >
-          Meet Our Team
+          {teamContent.title}
         </motion.h2>
         
         <motion.div 
@@ -51,7 +72,7 @@ const TeamSection = () => {
           viewport={{ once: true, amount: 0.3 }}
           variants={containerVariants}
         >
-          {teamMembers.map((member, index) => (
+          {members.map((member: TeamMember, index: number) => (
             <motion.div key={index} variants={itemVariants}>
               <Card className="hover:shadow-lg transition-shadow">
                 <CardContent className="pt-6">

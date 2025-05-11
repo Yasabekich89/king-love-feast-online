@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { HomeIcon, UtensilsIcon, UserIcon, LogOutIcon, Beef, Menu, X } from 'lucide-react';
+import { HomeIcon, UtensilsIcon, UserIcon, LogOutIcon, Beef, Menu, X, BookIcon } from 'lucide-react';
 import { useLanguage } from '@/contexts/language';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -65,6 +65,18 @@ const AdminLayout: React.FC = () => {
             >
               <Beef size={18} />
               <span>{t('admin.meatTypes')}</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/admin/about"
+              className={`flex items-center gap-2 px-6 py-3 hover:bg-brand-blue-dark ${
+                isActive('/admin/about') ? 'bg-brand-blue-dark border-l-4 border-brand-gold' : ''
+              }`}
+              onClick={() => isMobile && setSidebarOpen(false)}
+            >
+              <BookIcon size={18} />
+              <span>{t('admin.about.title')}</span>
             </Link>
           </li>
           <li>

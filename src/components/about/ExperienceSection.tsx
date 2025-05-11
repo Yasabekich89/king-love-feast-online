@@ -3,8 +3,19 @@ import React from "react";
 import { motion } from "framer-motion";
 import { zoomIn, fadeIn } from "@/lib/animation-variants";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/language";
+import { useAboutContent } from "@/hooks/use-about-content";
 
 const ExperienceSection = () => {
+  const { language } = useLanguage();
+  const { data } = useAboutContent(language);
+
+  // Get experience content or use fallback
+  const experienceContent = data?.experience || {
+    title: "The Royal Experience",
+    content: "At Kings Love Meat, every visit is a celebration of exceptional flavors and premium service. From the moment you step through our doors until your last delightful bite, we ensure an unforgettable dining experience fit for royalty."
+  };
+
   return (
     <section className="py-20 px-4 bg-gradient-to-b from-brand-blue to-slate-900 text-white">
       <div className="container mx-auto text-center max-w-4xl">
@@ -15,7 +26,7 @@ const ExperienceSection = () => {
           viewport={{ once: true }}
           variants={zoomIn}
         >
-          The Royal Experience
+          {experienceContent.title}
         </motion.h2>
         
         <motion.p 
@@ -26,9 +37,7 @@ const ExperienceSection = () => {
           variants={fadeIn}
           transition={{ delay: 0.2 }}
         >
-          At Kings Love Meat, every visit is a celebration of exceptional flavors and premium service. 
-          From the moment you step through our doors until your last delightful bite, 
-          we ensure an unforgettable dining experience fit for royalty.
+          {experienceContent.content}
         </motion.p>
         
         <motion.div

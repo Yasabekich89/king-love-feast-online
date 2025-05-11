@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      about_content: {
+        Row: {
+          content_am: Json
+          content_en: Json
+          content_ru: Json
+          created_at: string
+          id: string
+          section: string
+          updated_at: string
+        }
+        Insert: {
+          content_am?: Json
+          content_en?: Json
+          content_ru?: Json
+          created_at?: string
+          id?: string
+          section: string
+          updated_at?: string
+        }
+        Update: {
+          content_am?: Json
+          content_en?: Json
+          content_ru?: Json
+          created_at?: string
+          id?: string
+          section?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       meat_types: {
         Row: {
           am: string
