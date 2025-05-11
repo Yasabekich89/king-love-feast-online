@@ -173,7 +173,7 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // Hero section
     'hero.title': 'Թագավորական համեր',
-    'hero.subtitle': 'Բարձրակարգ միս արժանի թագավորների համար',
+    'hero.subtitle': 'Բարձրակարգ սնունդ թագավորներին վայել',
     'hero.cta': 'Ամրագրել սեղան',
     
     // Menu section

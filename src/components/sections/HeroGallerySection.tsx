@@ -1,4 +1,3 @@
-
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { 
@@ -11,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Crown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { letterVariants } from '@/lib/animation-variants';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 // Premium meat images for the restaurant
 const MEAT_IMAGES = [
@@ -22,35 +23,76 @@ const MEAT_IMAGES = [
 ];
 
 const HeroGallerySection: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [productImages, setProductImages] = useState<string[]>([]);
+  
+  // Fetch product images on component mount
+  useEffect(() => {
+    const fetchProductImages = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('image_src')
+        .not('image_src', 'is', null);
+      
+      if (error) {
+        console.error('Error fetching product images:', error);
+        return;
+      }
+      
+      // Extract image URLs from the data and filter out any nullish values
+      const images = data
+        .map(item => item.image_src)
+        .filter(Boolean) as string[];
+      
+      // If we have at least 5 images, randomly select 5
+      if (images.length >= 5) {
+        // Shuffle array and take the first 5
+        const shuffled = [...images].sort(() => 0.5 - Math.random());
+        setProductImages(shuffled.slice(0, 5));
+      } else {
+        // If we have fewer than 5 images, use what we have
+        setProductImages(images);
+      }
+    };
+    
+    fetchProductImages();
+  }, []);
   
   // Create an array of letters for text animation
   const titleText = t('hero.title');
-  const titleLetters = titleText.split("");
-
-  return (
-    <ContainerScroll className="h-[350vh]">
-      <BentoGrid className="sticky left-0 top-0 z-0 h-screen w-full p-4 bg-slate-900/50">
-        {MEAT_IMAGES.map((imageUrl, index) => (
-          <BentoCell
-            key={index}
-            className="overflow-hidden rounded-xl shadow-xl border border-brand-gold/20"
-          >
-            <div className="relative w-full h-full">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-              <img
-                className="size-full object-cover object-center"
-                src={imageUrl}
-                alt="Premium Meat Dish"
-              />
+  
+  // Handle Armenian title formatting
+  const renderTitle = () => {
+    if (language === 'am') {
+      // Split Armenian title into words and display each on a new line
+      const titleWords = titleText.split(" ");
+      return (
+        <h1 className="max-w-xl text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-white font-serif">
+          {titleWords.map((word, wordIndex) => (
+            <div key={wordIndex} className="block">
+              {word.split('').map((letter, letterIndex) => (
+                <motion.span 
+                  key={letterIndex} 
+                  variants={letterVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="inline-block"
+                  style={{ 
+                    textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                    animationDelay: `${(wordIndex * word.length + letterIndex) * 0.05}s`
+                  }}
+                >
+                  {letter === ' ' ? '\u00A0' : letter}
+                </motion.span>
+              ))}
             </div>
-          </BentoCell>
-        ))}
-      </BentoGrid>
-
-      <ContainerScale className="relative z-10 text-center">
-        <Crown className="mx-auto text-brand-gold mb-6" size={60} />
-        
+          ))}
+        </h1>
+      );
+    } else {
+      // For other languages, keep the original implementation
+      const titleLetters = titleText.split("");
+      return (
         <h1 className="max-w-xl text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-white font-serif">
           {titleLetters.map((letter, index) => (
             <motion.span 
@@ -68,6 +110,49 @@ const HeroGallerySection: React.FC = () => {
             </motion.span>
           ))}
         </h1>
+      );
+    }
+  };
+
+  return (
+    <ContainerScroll className="h-[350vh]">
+      <BentoGrid className="sticky left-0 top-0 z-0 h-screen w-full p-4 bg-slate-900/50">
+        {productImages.length > 0 ? (
+          // Display fetched product images
+          productImages.map((imageUrl, index) => (
+            <BentoCell
+              key={index}
+              className="overflow-hidden rounded-xl shadow-xl border border-brand-gold/20"
+            >
+              <div className="relative w-full h-full">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+                <img
+                  className="size-full object-cover object-center"
+                  src={imageUrl}
+                  alt="Premium Dish"
+                />
+              </div>
+            </BentoCell>
+          ))
+        ) : (
+          // Fallback placeholders while images are loading
+          Array(5).fill(0).map((_, index) => (
+            <BentoCell
+              key={index}
+              className="overflow-hidden rounded-xl shadow-xl border border-brand-gold/20 bg-gray-800"
+            >
+              <div className="relative w-full h-full">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+              </div>
+            </BentoCell>
+          ))
+        )}
+      </BentoGrid>
+
+      <ContainerScale className="relative z-10 text-center">
+        <Crown className="mx-auto text-brand-gold mb-6" size={60} />
+        
+        {renderTitle()}
         
         <motion.div 
           className="gold-divider mx-auto"
