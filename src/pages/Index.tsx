@@ -3,7 +3,6 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import InstagramFeed from '@/components/InstagramFeed';
-import WelcomeSection from '@/components/sections/WelcomeSection';
 import HeroSection from '@/components/sections/HeroSection';
 import FeaturedMenuSection from '@/components/sections/FeaturedMenuSection';
 import GravitySection from '@/components/sections/GravitySection';
@@ -13,9 +12,6 @@ const Index: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
-      {/* Welcome message with gravity physics demo */}
-      <WelcomeSection />
       
       {/* Hero Section */}
       <HeroSection />
