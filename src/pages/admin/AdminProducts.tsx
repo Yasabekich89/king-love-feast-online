@@ -1,11 +1,9 @@
-
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Tables } from '@/integrations/supabase/types';
-import ProductsTable from '@/components/admin/ProductsTable';
-import ProductForm from '@/components/admin/ProductForm';
+import { ProductsTable, ProductForm } from '@/components/admin';
 import { Button } from '@/components/ui/button';
 import { Plus, Filter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
