@@ -44,3 +44,81 @@ export const logPerformanceMetric = (metricName: string, value: number): void =>
     console.log(`Performance metric - ${metricName}: ${value}`);
   }
 };
+
+/**
+ * Calculate the appropriate image size based on viewport and device pixel ratio
+ * @param containerWidth Width of the container (default: viewport width)
+ * @returns The optimal image width to request
+ */
+export const getOptimalImageWidth = (containerWidth?: number): number => {
+  if (typeof window === 'undefined') return 1200; // Fallback for SSR
+
+  // Get device pixel ratio (default to 1 if not available)
+  const pixelRatio = window.devicePixelRatio || 1;
+  
+  // Use container width or viewport width
+  const width = containerWidth || window.innerWidth;
+  
+  // Calculate optimal width based on container/viewport and pixel ratio
+  let optimalWidth = Math.round(width * pixelRatio);
+  
+  // Cap at reasonable sizes to prevent unnecessarily large images
+  const breakpoints = [320, 640, 768, 1024, 1280, 1536, 2048, 3840];
+  
+  // Find the smallest breakpoint that is larger than our calculated width
+  for (const breakpoint of breakpoints) {
+    if (breakpoint >= optimalWidth) {
+      return breakpoint;
+    }
+  }
+  
+  // If we didn't find a suitable breakpoint, use the largest one
+  return breakpoints[breakpoints.length - 1];
+};
+
+/**
+ * Generate a responsive image URL with width parameter
+ * @param url Original image URL
+ * @param width Target width
+ * @returns Optimized image URL
+ */
+export const getOptimizedImageUrl = (url: string, width?: number): string => {
+  // Skip optimization for data URLs or relative URLs
+  if (!url || url.startsWith('data:') || url.startsWith('/')) {
+    return url;
+  }
+  
+  try {
+    // Parse the URL
+    const parsedUrl = new URL(url);
+    
+    // Check if URL is from common CDNs that support on-the-fly resizing
+    if (parsedUrl.hostname.includes('unsplash.com')) {
+      // Unsplash already has a built-in optimization API
+      const optimalWidth = width || getOptimalImageWidth();
+      const searchParams = parsedUrl.searchParams;
+      
+      // Update or add width parameter for Unsplash images
+      if (!searchParams.has('w')) {
+        searchParams.set('w', optimalWidth.toString());
+      }
+      
+      // Add quality parameter if not already present
+      if (!searchParams.has('q')) {
+        searchParams.set('q', '80');
+      }
+      
+      return parsedUrl.toString();
+    }
+    
+    // For Supabase Storage URLs, we could implement resize parameters if Supabase supports it
+    // This would require configuration of image resizing on the Supabase project
+    
+    // Return the original URL for other image sources
+    return url;
+  } catch (error) {
+    // If there's any error in processing, return the original URL
+    console.error('Error optimizing image URL:', error);
+    return url;
+  }
+};

@@ -1,3 +1,4 @@
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { 
@@ -12,14 +13,15 @@ import { motion } from 'framer-motion';
 import { letterVariants } from '@/lib/animation-variants';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { getOptimizedImageUrl } from '@/utils/performance-utils';
 
 // Premium meat images for the restaurant
 const MEAT_IMAGES = [
-  "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1602632032171-5cd51d27d50e?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?q=80&w=1280&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=1280&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=1280&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1602632032171-5cd51d27d50e?q=80&w=1280&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?q=80&w=1280&auto=format&fit=crop",
 ];
 
 const HeroGallerySection: React.FC = () => {
@@ -48,10 +50,13 @@ const HeroGallerySection: React.FC = () => {
       if (images.length >= 5) {
         // Shuffle array and take the first 5
         const shuffled = [...images].sort(() => 0.5 - Math.random());
-        setProductImages(shuffled.slice(0, 5));
+        // Generate optimized URLs for these images
+        const optimizedImages = shuffled.slice(0, 5).map(img => getOptimizedImageUrl(img));
+        setProductImages(optimizedImages);
       } else {
         // If we have fewer than 5 images, use what we have
-        setProductImages(images);
+        const optimizedImages = images.map(img => getOptimizedImageUrl(img));
+        setProductImages(optimizedImages);
       }
     };
     
@@ -130,6 +135,7 @@ const HeroGallerySection: React.FC = () => {
                   className="size-full object-cover object-center"
                   src={imageUrl}
                   alt="Premium Dish"
+                  loading={index < 2 ? 'eager' : 'lazy'}
                 />
               </div>
             </BentoCell>

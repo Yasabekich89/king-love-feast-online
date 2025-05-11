@@ -2,6 +2,7 @@
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Badge } from "@/components/ui/badge";
+import OptimizedImage from './OptimizedImage';
 
 interface MenuItemProps {
   id: string;
@@ -45,10 +46,10 @@ const MenuCard: React.FC<MenuItemProps> = ({
       className="menu-card overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 h-full flex flex-col"
     >
       <div className="relative overflow-hidden h-48">
-        <img 
+        <OptimizedImage 
           src={imageSrc} 
           alt={t(titleKey)} 
-          className="menu-item-image w-full h-full object-cover transition-transform duration-500"
+          className="w-full h-full object-cover transition-transform duration-500"
         />
         {isPopular && (
           <div className="absolute top-4 right-4">
