@@ -44,7 +44,7 @@ const MenuCard: React.FC<MenuItemProps> = ({
   return (
     <div 
       id={id}
-      className="menu-card overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 h-full flex flex-col"
+      className="menu-card overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 h-full flex flex-col menu-card-container"
     >
       <div className="p-4 pb-0">
         <div className="relative bg-gray-50 rounded-lg overflow-hidden">
@@ -53,7 +53,7 @@ const MenuCard: React.FC<MenuItemProps> = ({
               src={imageSrc} 
               alt={t(titleKey)} 
               className="w-full h-full object-contain p-2" 
-              containerClassName="flex items-center justify-center" 
+              containerClassName="flex items-center justify-center optimized-image-container" 
             />
             {isPopular && (
               <div className="absolute top-4 right-4">

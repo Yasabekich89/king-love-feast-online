@@ -31,27 +31,30 @@ const Index: React.FC = () => {
       
       <Header />
       
-      {/* Hero Gallery Section - Critical for first render */}
+      {/* Hero Gallery Section - Critical for first render - DON'T ADD overflow-hidden here */}
       <HeroGallerySection />
       
-      {/* Lazy load non-critical sections */}
-      <Suspense fallback={<div className="py-16 flex justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
-      </div>}>
-        <FeaturedMenuSection />
-      </Suspense>
-      
-      <Suspense fallback={<div className="py-16 flex justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
-      </div>}>
-        <InstagramFeed />
-      </Suspense>
-      
-      <Suspense fallback={<div className="py-16 flex justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
-      </div>}>
-        <ReservationSection />
-      </Suspense>
+      {/* Wrap subsequent sections in content-container for responsive fixes */}
+      <div className="content-container">
+        {/* Lazy load non-critical sections */}
+        <Suspense fallback={<div className="py-16 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+        </div>}>
+          <FeaturedMenuSection />
+        </Suspense>
+        
+        <Suspense fallback={<div className="py-16 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+        </div>}>
+          <InstagramFeed />
+        </Suspense>
+        
+        <Suspense fallback={<div className="py-16 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+        </div>}>
+          <ReservationSection />
+        </Suspense>
+      </div>
       
       <Footer />
     </div>

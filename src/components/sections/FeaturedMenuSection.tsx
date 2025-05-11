@@ -93,7 +93,7 @@ const FeaturedMenuSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 crown-pattern">
+    <section className="py-20 crown-pattern content-container">
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <Crown className="mx-auto text-brand-gold mb-4" size={40} />
@@ -103,7 +103,7 @@ const FeaturedMenuSection: React.FC = () => {
         </div>
         
         {isMobile ? (
-          <div className="relative mt-16">
+          <div className="carousel-container relative mt-16">
             <Carousel className="w-full">
               <CarouselContent>
                 {!loading && featuredProducts.length > 0 ? (

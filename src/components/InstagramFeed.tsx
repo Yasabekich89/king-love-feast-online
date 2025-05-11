@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Instagram } from 'lucide-react';
@@ -120,7 +119,7 @@ const InstagramFeed: React.FC = () => {
   }, [api, isMobile]);
 
   return (
-    <section id="instagram-section" className="py-16 bg-gray-50">
+    <section id="instagram-section" className="py-16 bg-gray-50 content-container">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('instagram.title')}</h2>
@@ -131,13 +130,13 @@ const InstagramFeed: React.FC = () => {
         {isVisible && (
           <>
             {isMobile ? (
-              <div className="relative">
+              <div className="carousel-container relative">
                 <Carousel className="w-full" setApi={setApi}>
                   <CarouselContent>
                     {instagramPosts.map((post) => (
-                      <CarouselItem key={post.id} className="min-h-[400px]">
+                      <CarouselItem key={post.id} className="min-h-[400px] carousel-item">
                         <div className="px-2 h-full">
-                          <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px] h-full">
+                          <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px] h-full instagram-media-container">
                             <blockquote 
                               className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
                               data-instgrm-permalink={post.permalink}
@@ -159,7 +158,7 @@ const InstagramFeed: React.FC = () => {
                 </Carousel>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 instagram-media-container">
                 {/* Instagram Posts Container - Using the provided embed codes but with custom styling */}
                 {instagramPosts.map((post) => (
                   <div key={post.id} className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px]">
@@ -167,7 +166,11 @@ const InstagramFeed: React.FC = () => {
                       className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
                       data-instgrm-permalink={post.permalink}
                       data-instgrm-version="14"
-                      style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
+                      style={{ 
+                        background: '#FFF', 
+                        maxWidth: '100%', 
+                        width: '100%' 
+                      }}
                     ></blockquote>
                   </div>
                 ))}
