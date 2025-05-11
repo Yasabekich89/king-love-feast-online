@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Tables } from '@/integrations/supabase/types';
 import { supabase } from '@/integrations/supabase/client';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/language';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -60,7 +60,7 @@ const formSchema = z.object({
 });
 
 const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
-  const { t, meatTypes } = useLanguage();
+  const { t, meatTypes, language } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
