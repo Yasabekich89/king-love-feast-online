@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Filter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Type for products
 type Product = Tables<'products'>;
@@ -18,6 +19,7 @@ const AdminProducts = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   
   // Local state
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -25,10 +27,15 @@ const AdminProducts = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   
-  // Fetch products
-  const { data: products = [], isLoading } = useQuery({
+  // Fetch products with auth
+  const { data: products = [], isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
+      // Make sure we have authentication before fetching
+      if (!user) {
+        throw new Error('Authentication required');
+      }
+      
       const { data, error } = await supabase
         .from('products')
         .select('*')
@@ -38,6 +45,11 @@ const AdminProducts = () => {
       return data as Product[];
     },
   });
+  
+  // If there's an error loading the products
+  if (error) {
+    console.error('Error loading products:', error);
+  }
   
   // Filter products by category
   const filteredProducts = selectedCategory === 'all'
@@ -68,6 +80,15 @@ const AdminProducts = () => {
   
   // Handle delete product
   const handleDelete = async (id: string) => {
+    if (!user) {
+      toast({
+        title: t('admin.error'),
+        description: t('admin.authRequired'),
+        variant: 'destructive',
+      });
+      return;
+    }
+    
     setIsDeleting(true);
     try {
       const { error } = await supabase
@@ -107,35 +128,44 @@ const AdminProducts = () => {
         </Button>
       </div>
       
-      <div className="flex items-center space-x-4 bg-white p-4 rounded-md shadow-sm mb-4">
-        <Filter className="h-5 w-5 text-gray-400" />
-        <div>
-          <select 
-            className="block w-full py-2 pl-3 pr-10 text-base border-gray-300 rounded-md focus:outline-none focus:ring-brand-blue focus:border-brand-blue sm:text-sm"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="all">{t('menu.all')}</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {t(`menu.category.${category}`)}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      
-      {isLoading ? (
-        <div className="flex justify-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div>
+      {error ? (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+          <h3 className="text-red-800 font-medium">Error loading products</h3>
+          <p className="text-red-600">{error.toString()}</p>
         </div>
       ) : (
-        <ProductsTable 
-          products={filteredProducts}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          isDeleting={isDeleting}
-        />
+        <>
+          <div className="flex items-center space-x-4 bg-white p-4 rounded-md shadow-sm mb-4">
+            <Filter className="h-5 w-5 text-gray-400" />
+            <div>
+              <select 
+                className="block w-full py-2 pl-3 pr-10 text-base border-gray-300 rounded-md focus:outline-none focus:ring-brand-blue focus:border-brand-blue sm:text-sm"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option value="all">{t('menu.all')}</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {t(`menu.category.${category}`)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          
+          {isLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div>
+            </div>
+          ) : (
+            <ProductsTable 
+              products={filteredProducts}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              isDeleting={isDeleting}
+            />
+          )}
+        </>
       )}
       
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
