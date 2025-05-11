@@ -1,19 +1,34 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/lib/animation-variants";
 import { Boxes } from "@/components/ui/background-boxes";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const HeroSection = () => {
+  const [isClient, setIsClient] = useState(false);
+  const isMobile = useIsMobile();
+  
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   return (
     <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
-      {/* Background animation */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-brand-blue/70 z-10" />
-        <div className="absolute inset-0">
-          <Boxes className="opacity-60" />
+      {/* Background animation - only render on client and conditionally */}
+      {isClient && (
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-brand-blue/70 z-10" />
+          {!isMobile ? (
+            <div className="absolute inset-0">
+              <Boxes className="opacity-60" />
+            </div>
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-brand-blue"></div>
+          )}
         </div>
-      </div>
+      )}
       
       {/* Content */}
       <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">

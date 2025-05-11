@@ -1,5 +1,6 @@
 
 import "./App.css";
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,18 +9,28 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/language";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import Reservations from "./pages/Reservations";
-import Contact from "./pages/Contact";
-import Menu from "./pages/Menu";
-import About from "./pages/About";
-import AdminProducts from "./pages/admin/AdminProducts";
-import AdminLayout from "./components/admin/AdminLayout";
-import AdminLogin from "./pages/admin/AdminLogin";
-import MeatTypesAdmin from "./pages/admin/MeatTypesAdmin";
+import Loading from "./components/Loading";
 
-const queryClient = new QueryClient();
+// Lazy load page components
+const Index = lazy(() => import("./pages/Index"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Reservations = lazy(() => import("./pages/Reservations"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Menu = lazy(() => import("./pages/Menu"));
+const About = lazy(() => import("./pages/About"));
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
+const AdminProducts = lazy(() => import("./pages/admin/AdminProducts"));
+const MeatTypesAdmin = lazy(() => import("./pages/admin/MeatTypesAdmin"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -30,24 +41,26 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/reservations" element={<Reservations />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/menu" element={<Menu />} />
-              <Route path="/about" element={<About />} />
-              
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminProducts />} />
-                <Route path="products" element={<AdminProducts />} />
-                <Route path="meat-types" element={<MeatTypesAdmin />} />
-              </Route>
-              
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Suspense fallback={<Loading />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/reservations" element={<Reservations />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/about" element={<About />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminProducts />} />
+                  <Route path="products" element={<AdminProducts />} />
+                  <Route path="meat-types" element={<MeatTypesAdmin />} />
+                </Route>
+                
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>

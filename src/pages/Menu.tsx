@@ -1,13 +1,16 @@
-import React, { useState, useMemo } from 'react';
+
+import React, { useState, useMemo, Suspense, lazy } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import MenuCard from '@/components/MenuCard';
-import MenuFilters from '@/components/MenuFilters';
 import { Tables } from '@/integrations/supabase/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+// Lazy load components that are not immediately visible
+const MenuFilters = lazy(() => import('@/components/MenuFilters'));
+const MenuCard = lazy(() => import('@/components/MenuCard'));
 
 // Type for products
 type Product = Tables<'products'>;
@@ -19,7 +22,7 @@ const Menu: React.FC = () => {
   const [selectedSpiceLevels, setSelectedSpiceLevels] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState('popular');
 
-  // Fetch products from Supabase
+  // Fetch products from Supabase with optimized query and stale time
   const { data: menuItems = [], isLoading } = useQuery({
     queryKey: ['menu-products'],
     queryFn: async () => {
@@ -30,9 +33,11 @@ const Menu: React.FC = () => {
       if (error) throw error;
       return data as Product[];
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 30 * 60 * 1000, // 30 minutes
   });
 
-  // Extract unique categories and meat types
+  // Extract unique categories and meat types - memoized
   const categories = useMemo(() => {
     return [...new Set(menuItems.map(item => item.category))];
   }, [menuItems]);
@@ -49,7 +54,7 @@ const Menu: React.FC = () => {
     return [...types];
   }, [menuItems]);
 
-  // Filter menu items
+  // Filter menu items - memoized
   const filteredItems = useMemo(() => {
     return menuItems.filter(item => {
       // Filter by category
@@ -77,7 +82,7 @@ const Menu: React.FC = () => {
     });
   }, [menuItems, selectedCategory, selectedMeatTypes, selectedSpiceLevels]);
 
-  // Sort menu items
+  // Sort menu items - memoized
   const sortedItems = useMemo(() => {
     switch (sortBy) {
       case 'popular':
@@ -160,17 +165,21 @@ const Menu: React.FC = () => {
           </div>
         ) : (
           <>
-            <MenuFilters 
-              categories={categories}
-              meatTypes={meatTypes}
-              selectedCategory={selectedCategory}
-              selectedMeatTypes={selectedMeatTypes}
-              selectedSpiceLevels={selectedSpiceLevels}
-              onCategoryChange={handleCategoryChange}
-              onMeatTypeChange={handleMeatTypeChange}
-              onSpiceLevelChange={handleSpiceLevelChange}
-              onClearFilters={clearFilters}
-            />
+            <Suspense fallback={<div className="py-4 flex justify-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-brand-gold"></div>
+            </div>}>
+              <MenuFilters 
+                categories={categories}
+                meatTypes={meatTypes}
+                selectedCategory={selectedCategory}
+                selectedMeatTypes={selectedMeatTypes}
+                selectedSpiceLevels={selectedSpiceLevels}
+                onCategoryChange={handleCategoryChange}
+                onMeatTypeChange={handleMeatTypeChange}
+                onSpiceLevelChange={handleSpiceLevelChange}
+                onClearFilters={clearFilters}
+              />
+            </Suspense>
             
             {sortedItems.length === 0 ? (
               <div className="text-center py-12">
@@ -184,20 +193,24 @@ const Menu: React.FC = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {sortedItems.map((item) => (
-                  <MenuCard
-                    key={item.id}
-                    id={item.id}
-                    category={item.category}
-                    meatType={item.meat_type}
-                    spiceLevel={item.spice_level}
-                    imageSrc={item.image_src || ''}
-                    titleKey={item.title_key}
-                    descriptionKey={item.description_key}
-                    priceKey={item.price_key}
-                    isPopular={item.is_popular}
-                  />
-                ))}
+                <Suspense fallback={<div className="col-span-full py-8 flex justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+                </div>}>
+                  {sortedItems.map((item) => (
+                    <MenuCard
+                      key={item.id}
+                      id={item.id}
+                      category={item.category}
+                      meatType={item.meat_type}
+                      spiceLevel={item.spice_level}
+                      imageSrc={item.image_src || ''}
+                      titleKey={item.title_key}
+                      descriptionKey={item.description_key}
+                      priceKey={item.price_key}
+                      isPopular={item.is_popular}
+                    />
+                  ))}
+                </Suspense>
               </div>
             )}
           </>

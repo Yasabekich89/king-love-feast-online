@@ -1,12 +1,22 @@
 
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
-  const rows = new Array(150).fill(1);
-  const cols = new Array(100).fill(1);
+  const [isClient, setIsClient] = useState(false);
+  const isMobile = useIsMobile();
+  
+  // Only render component after client-side hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  // Reduce the number of rows and columns based on device
+  const rows = new Array(isMobile ? 60 : 120).fill(1);
+  const cols = new Array(isMobile ? 40 : 80).fill(1);
   
   // Using a more colorful and vibrant palette
   const colors = [
@@ -26,6 +36,13 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
   const getRandomColor = () => {
     return colors[Math.floor(Math.random() * colors.length)];
   };
+  
+  if (!isClient) return null; // Don't render during SSR
+  
+  // Don't animate all cells, just a subset
+  const shouldAnimate = (i: number, j: number) => {
+    return (j % 6 === 0 && i % 6 === 0);
+  };
 
   return (
     <div
@@ -42,21 +59,23 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
         <motion.div
           key={`row` + i}
           className="w-16 h-8 border-l border-slate-700 relative"
+          initial={false}
         >
           {cols.map((_, j) => (
             <motion.div
-              whileHover={{
-                backgroundColor: getRandomColor(),
-                transition: { duration: 0 },
-              }}
-              animate={{
-                backgroundColor: j % 3 === 0 && i % 3 === 0 ? getRandomColor() : "transparent",
-                transition: { duration: 1.5, repeat: Infinity, repeatType: "reverse" },
-              }}
               key={`col` + j}
               className="w-16 h-8 border-r border-t border-slate-700 relative"
+              animate={shouldAnimate(i, j) ? {
+                backgroundColor: j % 6 === 0 && i % 6 === 0 ? getRandomColor() : "transparent",
+              } : undefined}
+              transition={shouldAnimate(i, j) ? { 
+                duration: 1.5, 
+                repeat: Infinity, 
+                repeatType: "reverse",
+                repeatDelay: 0.5 
+              } : undefined}
             >
-              {j % 2 === 0 && i % 2 === 0 ? (
+              {j % 8 === 0 && i % 8 === 0 && !isMobile ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -64,6 +83,7 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
                   strokeWidth="1.5"
                   stroke="currentColor"
                   className="absolute h-6 w-10 -top-[14px] -left-[22px] text-slate-700 stroke-[1px] pointer-events-none"
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"

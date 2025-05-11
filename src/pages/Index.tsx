@@ -1,12 +1,15 @@
 
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import InstagramFeed from '@/components/InstagramFeed';
-import FeaturedMenuSection from '@/components/sections/FeaturedMenuSection';
-import ReservationSection from '@/components/sections/ReservationSection';
 import HeroGallerySection from '@/components/sections/HeroGallerySection';
 import { motion, useScroll, useSpring } from 'framer-motion';
+import PerformanceMonitor from '@/components/PerformanceMonitor';
+
+// Lazy load non-critical components
+const InstagramFeed = lazy(() => import('@/components/InstagramFeed'));
+const FeaturedMenuSection = lazy(() => import('@/components/sections/FeaturedMenuSection'));
+const ReservationSection = lazy(() => import('@/components/sections/ReservationSection'));
 
 const Index: React.FC = () => {
   const { scrollYProgress } = useScroll();
@@ -18,6 +21,8 @@ const Index: React.FC = () => {
   
   return (
     <div className="min-h-screen flex flex-col relative">
+      <PerformanceMonitor />
+      
       {/* Scroll progress indicator */}
       <motion.div 
         className="fixed top-0 left-0 right-0 h-1 bg-brand-gold z-50"
@@ -26,17 +31,27 @@ const Index: React.FC = () => {
       
       <Header />
       
-      {/* Hero Gallery Section */}
+      {/* Hero Gallery Section - Critical for first render */}
       <HeroGallerySection />
       
-      {/* Featured Menu Section */}
-      <FeaturedMenuSection />
+      {/* Lazy load non-critical sections */}
+      <Suspense fallback={<div className="py-16 flex justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+      </div>}>
+        <FeaturedMenuSection />
+      </Suspense>
       
-      {/* Instagram Feed Section */}
-      <InstagramFeed />
+      <Suspense fallback={<div className="py-16 flex justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+      </div>}>
+        <InstagramFeed />
+      </Suspense>
       
-      {/* Reservation Section */}
-      <ReservationSection />
+      <Suspense fallback={<div className="py-16 flex justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+      </div>}>
+        <ReservationSection />
+      </Suspense>
       
       <Footer />
     </div>
