@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Crown, ArrowRight } from 'lucide-react';
@@ -93,7 +92,7 @@ const FeaturedMenuSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 crown-pattern">
+    <section className="py-20 crown-pattern overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <Crown className="mx-auto text-brand-gold mb-4" size={40} />
@@ -103,13 +102,13 @@ const FeaturedMenuSection: React.FC = () => {
         </div>
         
         {isMobile ? (
-          <div className="relative mt-16">
+          <div className="relative mt-16 w-full overflow-hidden">
             <Carousel className="w-full">
               <CarouselContent>
                 {!loading && featuredProducts.length > 0 ? (
                   featuredProducts.map((product) => (
-                    <CarouselItem key={product.id}>
-                      <div className="px-2">
+                    <CarouselItem key={product.id} className="w-full">
+                      <div className="px-2 w-full">
                         <MenuCard
                           id={product.id}
                           category={product.category}
@@ -126,9 +125,9 @@ const FeaturedMenuSection: React.FC = () => {
                   ))
                 ) : (
                   staticMenuItems.map((item) => (
-                    <CarouselItem key={item.id}>
-                      <div className="px-2">
-                        <Card className="menu-card overflow-hidden rounded-lg">
+                    <CarouselItem key={item.id} className="w-full">
+                      <div className="px-2 w-full">
+                        <Card className="menu-card overflow-hidden rounded-lg w-full">
                           <div className="p-4">
                             <AspectRatio ratio={4/3} className="bg-gray-50 rounded-lg overflow-hidden">
                               <img 

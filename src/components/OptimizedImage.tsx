@@ -65,8 +65,11 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   return (
     <div 
       ref={containerRef}
-      className={`relative overflow-hidden ${containerClassName}`}
-      style={{ height: height ? `${height}px` : 'auto' }}
+      className={`relative overflow-hidden max-w-full ${containerClassName}`}
+      style={{ 
+        height: height ? `${height}px` : 'auto',
+        width: '100%'
+      }}
     >
       {/* Show a loading placeholder until the image loads */}
       {!isLoaded && !error && (
@@ -84,12 +87,13 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         ref={imgRef}
         src={optimizedSrc}
         alt={alt}
-        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 max-w-full h-auto`}
         loading={priority ? 'eager' : 'lazy'} 
         onLoad={handleLoad}
         onError={handleError}
         width={width}
         height={height}
+        style={{ objectFit: 'contain' }}
       />
     </div>
   );

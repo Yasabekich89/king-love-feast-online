@@ -120,7 +120,7 @@ const InstagramFeed: React.FC = () => {
   }, [api, isMobile]);
 
   return (
-    <section id="instagram-section" className="py-16 bg-gray-50">
+    <section id="instagram-section" className="py-16 bg-gray-50 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('instagram.title')}</h2>
@@ -131,12 +131,12 @@ const InstagramFeed: React.FC = () => {
         {isVisible && (
           <>
             {isMobile ? (
-              <div className="relative">
+              <div className="relative w-full overflow-hidden">
                 <Carousel className="w-full" setApi={setApi}>
-                  <CarouselContent>
+                  <CarouselContent className="w-full">
                     {instagramPosts.map((post) => (
-                      <CarouselItem key={post.id} className="min-h-[400px]">
-                        <div className="px-2 h-full">
+                      <CarouselItem key={post.id} className="min-h-[400px] w-full">
+                        <div className="px-2 h-full w-full">
                           <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px] h-full">
                             <blockquote 
                               className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
@@ -144,9 +144,9 @@ const InstagramFeed: React.FC = () => {
                               data-instgrm-version="14"
                               style={{ 
                                 background: '#FFF', 
-                                maxWidth: '100%', 
                                 width: '100%',
-                                minHeight: '380px'
+                                minHeight: '380px',
+                                maxWidth: '100%'
                               }}
                             ></blockquote>
                           </div>
@@ -167,7 +167,11 @@ const InstagramFeed: React.FC = () => {
                       className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
                       data-instgrm-permalink={post.permalink}
                       data-instgrm-version="14"
-                      style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
+                      style={{ 
+                        background: '#FFF', 
+                        width: '100%', 
+                        maxWidth: '100%'
+                      }}
                     ></blockquote>
                   </div>
                 ))}

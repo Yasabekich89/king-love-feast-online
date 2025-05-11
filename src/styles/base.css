@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   text-align: center;
+  overflow-x: hidden;
 }
 
 .logo {
@@ -36,6 +37,7 @@
 
 .card {
   padding: 2em;
+  max-width: 100%;
 }
 
 .read-the-docs {

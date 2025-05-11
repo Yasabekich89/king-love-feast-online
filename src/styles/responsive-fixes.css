@@ -1,0 +1,71 @@
+
+/* Responsive fixes to prevent horizontal overflow without breaking animations */
+
+/* Global fixes for overflow containers */
+.container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Target specific sections that need overflow handling (excluding hero section) */
+section:not(.h-[350vh]) {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Fix for Instagram embeds */
+.instagram-media {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+.instagram-post-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Fix carousel items from overflowing */
+.embla {
+  overflow: hidden;
+}
+
+.embla__container {
+  display: flex;
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+/* Ensure all images are contained */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Fix card layout on mobile */
+.menu-card {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* More specific fixes for carousel content */
+.CarouselItem {
+  max-width: 100%;
+}
+
+/* Fix for mobile padding */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
