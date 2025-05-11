@@ -3,13 +3,6 @@ import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Instagram } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { 
-  Carousel, 
-  CarouselContent, 
-  CarouselItem, 
-  CarouselNext, 
-  CarouselPrevious 
-} from '@/components/ui/carousel';
 
 // Function to load Instagram embed script
 const loadInstagramEmbedScript = () => {
@@ -100,24 +93,6 @@ const InstagramFeed: React.FC = () => {
       window.instgrm.Embeds.process();
     }
   };
-  
-  // Setup a ref for the carousel
-  const [api, setApi] = React.useState<any>(null);
-  
-  // When the carousel's API is available, add an event listener for scrolling
-  React.useEffect(() => {
-    if (!api || !isMobile) return;
-    
-    const onSelect = () => {
-      handleCarouselChange();
-    };
-    
-    api.on('select', onSelect);
-    
-    return () => {
-      api.off('select', onSelect);
-    };
-  }, [api, isMobile]);
 
   // For mobile, just display the first post
   const displayPosts = isMobile ? [instagramPosts[0]] : instagramPosts;
