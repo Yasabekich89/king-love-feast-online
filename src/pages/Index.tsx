@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
@@ -11,6 +12,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import MenuCard from '@/components/MenuCard';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { CommitsGridDemo } from '@/components/ui/commits-grid-demo';
 import { 
   Carousel, 
   CarouselContent, 
@@ -97,6 +99,14 @@ const Index: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      
+      {/* Welcome message with CommitsGrid */}
+      <div className="w-full py-12 bg-white flex flex-col items-center justify-center">
+        <h2 className="text-3xl md:text-4xl font-serif font-bold text-brand-blue mb-6">Welcome to</h2>
+        <div className="w-full max-w-3xl mx-auto px-4">
+          <CommitsGridDemo />
+        </div>
+      </div>
       
       {/* Hero Section */}
       <section className="relative h-[90vh] min-h-[600px] flex items-center">
