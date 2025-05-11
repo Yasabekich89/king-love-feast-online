@@ -128,11 +128,11 @@ const FeaturedMenuSection: React.FC = () => {
                     <CarouselItem key={item.id}>
                       <div className="px-2">
                         <Card className="menu-card overflow-hidden rounded-lg">
-                          <div className="h-60 overflow-hidden">
+                          <div className="h-60 overflow-hidden bg-gray-50">
                             <img 
                               src={item.image} 
                               alt={item.name} 
-                              className="w-full h-full object-cover menu-item-image"
+                              className="w-full h-full object-contain" // Changed from object-cover to object-contain
                             />
                           </div>
                           <CardContent className="p-6">
@@ -175,11 +175,11 @@ const FeaturedMenuSection: React.FC = () => {
             ) : (
               staticMenuItems.map((item) => (
                 <Card key={item.id} className="menu-card overflow-hidden rounded-lg">
-                  <div className="h-60 overflow-hidden">
+                  <div className="h-60 overflow-hidden bg-gray-50">
                     <img 
                       src={item.image} 
                       alt={item.name} 
-                      className="w-full h-full object-cover menu-item-image"
+                      className="w-full h-full object-contain" // Changed from object-cover to object-contain
                     />
                   </div>
                   <CardContent className="p-6">

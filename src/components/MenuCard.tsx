@@ -49,7 +49,8 @@ const MenuCard: React.FC<MenuItemProps> = ({
         <OptimizedImage 
           src={imageSrc} 
           alt={t(titleKey)} 
-          className="w-full h-full object-cover transition-transform duration-500"
+          className="w-full h-full object-contain" // Changed from object-cover to object-contain
+          containerClassName="bg-gray-50" // Added light background for the image container
         />
         {isPopular && (
           <div className="absolute top-4 right-4">
