@@ -8,16 +8,17 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
   const rows = new Array(150).fill(1);
   const cols = new Array(100).fill(1);
   
-  // Using footer-appropriate colors with better visibility
+  // Using a more colorful and vibrant palette
   const colors = [
     "rgb(30, 41, 59)", // slate-800
     "rgb(15, 23, 42)", // slate-900
     "rgb(17, 24, 39)", // gray-900
-    "rgb(31, 41, 55)", // gray-800
-    "rgb(30, 58, 138)", // blue-900
-    "rgb(30, 64, 175)", // indigo-900
-    "rgb(76, 29, 149)", // purple-900
-    "rgb(198, 146, 20, 0.5)", // brand-gold with higher opacity
+    "#9b87f5", // Primary Purple
+    "#7E69AB", // Secondary Purple
+    "#D946EF", // Magenta Pink
+    "#F97316", // Bright Orange
+    "#0EA5E9", // Ocean Blue
+    "rgb(198, 146, 20, 0.6)", // brand-gold with higher opacity
     "rgb(10, 61, 79, 0.7)", // brand-blue with higher opacity
     "rgb(209, 213, 219)", // gray-300 - adding lighter color for contrast
   ];
@@ -50,7 +51,7 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
               }}
               animate={{
                 backgroundColor: j % 3 === 0 && i % 3 === 0 ? getRandomColor() : "transparent",
-                transition: { duration: 2, repeat: Infinity, repeatType: "reverse" },
+                transition: { duration: 1.5, repeat: Infinity, repeatType: "reverse" },
               }}
               key={`col` + j}
               className="w-16 h-8 border-r border-t border-slate-700 relative"

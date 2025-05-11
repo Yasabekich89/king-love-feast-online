@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Reservations from "./pages/Reservations";
 import Contact from "./pages/Contact";
 import Menu from "./pages/Menu";
+import About from "./pages/About";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -34,6 +35,7 @@ const App = () => (
               <Route path="/reservations" element={<Reservations />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/menu" element={<Menu />} />
+              <Route path="/about" element={<About />} />
               
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />

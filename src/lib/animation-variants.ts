@@ -22,7 +22,7 @@ export const itemVariants: Variants = {
   }
 };
 
-// Fade in animation
+// Fade in animation with more vibrant transform
 export const fadeIn: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
@@ -32,17 +32,17 @@ export const fadeIn: Variants = {
   }
 };
 
-// Zoom and fade animation
+// Zoom and fade animation with more bounce
 export const zoomIn: Variants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: { 
     opacity: 1, 
     scale: 1,
-    transition: { type: "spring", stiffness: 80, delay: 0.2 }
+    transition: { type: "spring", stiffness: 100, delay: 0.2 }
   }
 };
 
-// Slide in from right
+// Slide in from right with enhanced spring
 export const slideInRight: Variants = {
   hidden: { x: 100, opacity: 0 },
   visible: { 
@@ -52,7 +52,7 @@ export const slideInRight: Variants = {
   }
 };
 
-// Slide in from left
+// Slide in from left with enhanced spring
 export const slideInLeft: Variants = {
   hidden: { x: -100, opacity: 0 },
   visible: { 
@@ -98,4 +98,52 @@ export const magneticHover = (e: React.MouseEvent<HTMLElement>, ref: React.RefOb
 export const magneticExit = (ref: React.RefObject<HTMLElement>) => {
   if (!ref.current) return;
   ref.current.style.transform = `translate(0px, 0px)`;
+};
+
+// New colorful animations
+export const pulseAnimation: Variants = {
+  hidden: { opacity: 0.8, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 1.5,
+      repeat: Infinity,
+      repeatType: "reverse"
+    }
+  }
+};
+
+export const colorShift: Variants = {
+  hidden: { backgroundColor: "#1E293B" },
+  visible: {
+    backgroundColor: ["#1E293B", "#9b87f5", "#D946EF", "#0EA5E9", "#1E293B"],
+    transition: { 
+      duration: 5, 
+      repeat: Infinity,
+      repeatType: "reverse" 
+    }
+  }
+};
+
+export const rotateIn: Variants = {
+  hidden: { opacity: 0, rotate: -15, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    rotate: 0,
+    scale: 1,
+    transition: { type: "spring", damping: 10, stiffness: 100 }
+  }
+};
+
+export const floatAnimation: Variants = {
+  hidden: { y: 0 },
+  visible: {
+    y: [-5, 5, -5],
+    transition: { 
+      duration: 3, 
+      repeat: Infinity,
+      ease: "easeInOut" 
+    }
+  }
 };
