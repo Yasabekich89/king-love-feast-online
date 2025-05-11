@@ -107,17 +107,15 @@ const AdminLayout: React.FC = () => {
             <div className="flex justify-between items-center px-6 py-4">
               <div className="flex items-center gap-2">
                 {isMobile && (
-                  <SheetTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={() => setSidebarOpen(true)}
-                      className="mr-2"
-                    >
-                      <Menu size={20} />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </SheetTrigger>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setSidebarOpen(true)}
+                    className="mr-2"
+                  >
+                    <Menu size={20} />
+                    <span className="sr-only">Open menu</span>
+                  </Button>
                 )}
                 <h2 className="text-xl font-medium">{t('admin.dashboard')}</h2>
               </div>
