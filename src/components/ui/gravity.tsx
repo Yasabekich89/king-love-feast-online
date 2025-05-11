@@ -1,3 +1,4 @@
+
 import {
   createContext,
   forwardRef,
@@ -22,6 +23,7 @@ import Matter, {
   Runner,
   World,
 } from "matter-js"
+import * as decomp from "poly-decomp"
 
 import { cn } from "@/lib/utils"
 
@@ -292,7 +294,8 @@ const Gravity = forwardRef<GravityRef, GravityProps>(
       const height = canvas.current.offsetHeight
       const width = canvas.current.offsetWidth
 
-      Common.setDecomp(require("poly-decomp"))
+      // Use imported decomp instead of require
+      Common.setDecomp(decomp)
 
       engine.current.gravity.x = gravity.x
       engine.current.gravity.y = gravity.y
