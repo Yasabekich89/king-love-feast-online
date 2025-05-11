@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { translations } from './translations';
@@ -39,6 +38,25 @@ export const LanguageProvider: React.FC<{children: ReactNode}> = ({ children }) 
   }, []);
 
   const t = (key: string): string => {
+    // Check if this is a meat type translation key
+    if (key.startsWith('menu.meatType.')) {
+      const meatTypeKey = key.replace('menu.meatType.', '');
+      
+      // Find the meat type in our database-fetched meat types
+      const meatType = meatTypes.find(type => type.key === meatTypeKey);
+      
+      // If found and has a translation for the current language, use it
+      if (meatType && meatType[language]) {
+        return meatType[language];
+      }
+      
+      // Fallback to English translation from meat type if available
+      if (meatType && meatType.en) {
+        return meatType.en;
+      }
+    }
+    
+    // Otherwise use the standard translations
     return translations[language][key] || key;
   };
 
