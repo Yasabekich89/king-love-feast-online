@@ -1,0 +1,59 @@
+
+/* Responsive fixes to prevent horizontal scrolling */
+
+/* Add global overflow protection */
+html, body, #root {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Make all images responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure iframes are responsive */
+iframe {
+  max-width: 100% !important;
+}
+
+/* Fix Instagram embeds on mobile */
+.instagram-media {
+  min-width: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border-width: 0 !important;
+}
+
+/* Ensure content containers respect viewport width */
+.container {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix grid overflow issues */
+.grid {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Ensure all sections are contained */
+section {
+  overflow-x: hidden;
+}
+
+/* Fix image galleries and carousels */
+.BentoGrid, .BentoCell {
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+/* Fix hero gallery overflow */
+.ContainerScroll, .ContainerScale {
+  max-width: 100%;
+  overflow-x: hidden;
+}

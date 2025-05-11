@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   text-align: center;
+  overflow-x: hidden;  /* Prevent horizontal scroll */
 }
 
 .logo {
@@ -40,4 +41,16 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Mobile-specific fixes */
+@media (max-width: 767px) {
+  img, video, iframe {
+    max-width: 100% !important;
+  }
+  
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

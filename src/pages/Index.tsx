@@ -20,7 +20,7 @@ const Index: React.FC = () => {
   });
   
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
       <PerformanceMonitor />
       
       {/* Scroll progress indicator */}
@@ -32,26 +32,34 @@ const Index: React.FC = () => {
       <Header />
       
       {/* Hero Gallery Section - Critical for first render */}
-      <HeroGallerySection />
+      <div className="w-full overflow-hidden">
+        <HeroGallerySection />
+      </div>
       
       {/* Lazy load non-critical sections */}
-      <Suspense fallback={<div className="py-16 flex justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
-      </div>}>
-        <FeaturedMenuSection />
-      </Suspense>
+      <div className="w-full overflow-hidden">
+        <Suspense fallback={<div className="py-16 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+        </div>}>
+          <FeaturedMenuSection />
+        </Suspense>
+      </div>
       
-      <Suspense fallback={<div className="py-16 flex justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
-      </div>}>
-        <InstagramFeed />
-      </Suspense>
+      <div className="w-full overflow-hidden">
+        <Suspense fallback={<div className="py-16 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+        </div>}>
+          <InstagramFeed />
+        </Suspense>
+      </div>
       
-      <Suspense fallback={<div className="py-16 flex justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
-      </div>}>
-        <ReservationSection />
-      </Suspense>
+      <div className="w-full overflow-hidden">
+        <Suspense fallback={<div className="py-16 flex justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+        </div>}>
+          <ReservationSection />
+        </Suspense>
+      </div>
       
       <Footer />
     </div>
