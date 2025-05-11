@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MenuCard from '@/components/MenuCard';
 import MenuFilters from '@/components/MenuFilters';
@@ -123,6 +124,8 @@ const Menu: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Header />
+      
       {/* Hero Section */}
       <div className="relative bg-brand-blue py-16">
         <div className="crown-pattern absolute inset-0 opacity-10"></div>

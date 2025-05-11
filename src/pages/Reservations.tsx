@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ReservationForm from '@/components/ReservationForm';
 import { BackgroundBoxesDemo } from '@/components/ui/demo';
@@ -11,6 +12,8 @@ const Reservations: React.FC = () => {
   
   return (
     <div className="min-h-screen flex flex-col">
+      <Header />
+      
       {/* Background Boxes Demo Section with Reservation Title */}
       <BackgroundBoxesDemo />
       
