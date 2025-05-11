@@ -119,6 +119,9 @@ const InstagramFeed: React.FC = () => {
     };
   }, [api, isMobile]);
 
+  // For mobile, just display the first post
+  const displayPosts = isMobile ? [instagramPosts[0]] : instagramPosts;
+
   return (
     <section id="instagram-section" className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -131,34 +134,24 @@ const InstagramFeed: React.FC = () => {
         {isVisible && (
           <>
             {isMobile ? (
-              <div className="relative">
-                <Carousel className="w-full" setApi={setApi}>
-                  <CarouselContent>
-                    {instagramPosts.map((post) => (
-                      <CarouselItem key={post.id} className="min-h-[400px]">
-                        <div className="px-2 h-full">
-                          <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px] h-full">
-                            <blockquote 
-                              className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
-                              data-instgrm-permalink={post.permalink}
-                              data-instgrm-version="14"
-                              style={{ 
-                                background: '#FFF', 
-                                maxWidth: '100%', 
-                                width: '100%',
-                                minHeight: '380px'
-                              }}
-                            ></blockquote>
-                          </div>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="left-2 lg:left-4" />
-                  <CarouselNext className="right-2 lg:right-4" />
-                </Carousel>
+              // Mobile view: Show only a single Instagram post (the first one)
+              <div className="max-w-sm mx-auto mb-8"> 
+                <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px]">
+                  <blockquote 
+                    className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
+                    data-instgrm-permalink={displayPosts[0].permalink}
+                    data-instgrm-version="14"
+                    style={{ 
+                      background: '#FFF', 
+                      maxWidth: '100%', 
+                      width: '100%',
+                      minHeight: '380px'
+                    }}
+                  ></blockquote>
+                </div>
               </div>
             ) : (
+              // Desktop view: Show all posts in a grid
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Instagram Posts Container - Using the provided embed codes but with custom styling */}
                 {instagramPosts.map((post) => (

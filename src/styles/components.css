@@ -17,7 +17,9 @@
 
 @media (max-width: 768px) {
   .instagram-post-container {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    max-width: 100%;
+    overflow: hidden;
   }
 }
 
@@ -46,6 +48,8 @@
 @media (max-width: 640px) {
   .instagram-media {
     min-height: 400px;
+    max-width: 100% !important;
+    overflow: hidden !important;
   }
 }
 
