@@ -108,42 +108,11 @@ export const getOptimizedImageUrl = (url: string, width?: number): string => {
         searchParams.set('q', '80');
       }
       
-      // Add auto format parameter for better format selection
-      if (!searchParams.has('auto')) {
-        searchParams.set('auto', 'format,compress');
-      }
-      
       return parsedUrl.toString();
     }
     
-    // For Supabase Storage URLs
-    if (parsedUrl.hostname.includes('supabase.co') || 
-        parsedUrl.pathname.includes('storage/v1')) {
-      
-      // Check if the URL already has a transform parameter
-      if (!parsedUrl.pathname.includes('transform') && 
-          (parsedUrl.pathname.includes('.jpg') || 
-           parsedUrl.pathname.includes('.jpeg') || 
-           parsedUrl.pathname.includes('.png') || 
-           parsedUrl.pathname.includes('.webp'))) {
-        
-        // Add width parameter if Supabase image transformations are enabled
-        // Note: This requires image transformations to be enabled in the Supabase project
-        const optimalWidth = width || getOptimalImageWidth();
-        
-        // Some Supabase projects support transform parameter
-        // Format: /storage/v1/transform/width=500,quality=80/object/...
-        const transformPath = `/storage/v1/transform/width=${optimalWidth},quality=80`;
-        const objectPath = parsedUrl.pathname.replace('/storage/v1/object', '');
-        
-        // Only try to apply transform if the URL looks like a storage URL
-        if (objectPath !== parsedUrl.pathname) {
-          // Create a new URL with the transform path
-          parsedUrl.pathname = `${transformPath}/object${objectPath}`;
-          return parsedUrl.toString();
-        }
-      }
-    }
+    // For Supabase Storage URLs, we could implement resize parameters if Supabase supports it
+    // This would require configuration of image resizing on the Supabase project
     
     // Return the original URL for other image sources
     return url;
