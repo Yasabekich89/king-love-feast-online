@@ -45,14 +45,14 @@ const GravitySection: React.FC = () => {
     transition: { type: "spring", stiffness: 400, damping: 10 }
   };
 
-  // Define the floating animation directly instead of using the variant
+  // Define the floating animation with proper type literals
   const floatingAnimation = {
     y: [0, -10, 0],
     transition: {
       duration: 3,
       repeat: Infinity,
-      repeatType: "reverse",
-      ease: "easeInOut",
+      repeatType: "reverse" as const, // Type assertion to literal "reverse"
+      ease: "easeInOut"
     }
   };
   
