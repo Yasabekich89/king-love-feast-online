@@ -73,6 +73,24 @@ const InstagramFeed: React.FC = () => {
       window.instgrm.Embeds.process();
     }
   };
+  
+  // Setup a ref for the carousel
+  const [api, setApi] = React.useState<any>(null);
+  
+  // When the carousel's API is available, add an event listener for scrolling
+  React.useEffect(() => {
+    if (!api || !isMobile) return;
+    
+    const onSelect = () => {
+      handleCarouselChange();
+    };
+    
+    api.on('select', onSelect);
+    
+    return () => {
+      api.off('select', onSelect);
+    };
+  }, [api, isMobile]);
 
   return (
     <section className="py-16 bg-gray-50">
@@ -85,7 +103,7 @@ const InstagramFeed: React.FC = () => {
         
         {isMobile ? (
           <div className="relative">
-            <Carousel className="w-full" onScrollEnd={handleCarouselChange}>
+            <Carousel className="w-full" setApi={setApi}>
               <CarouselContent>
                 {instagramPosts.map((post) => (
                   <CarouselItem key={post.id} className="min-h-[400px]">
