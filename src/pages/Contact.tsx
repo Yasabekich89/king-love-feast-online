@@ -158,12 +158,12 @@ const Contact = () => {
             </div>
           </div>
           
-          {/* Google Maps Section - Updated for responsiveness */}
+          {/* Google Maps Section */}
           <div className="h-full">
             <h2 className="text-3xl font-serif font-bold text-brand-blue mb-6">
               {t('contact.findUsMap')}
             </h2>
-            <div className="contact-map-container border-4 border-brand-gold rounded-lg overflow-hidden shadow-lg h-[450px] max-w-full">
+            <div className="border-4 border-brand-gold rounded-lg overflow-hidden shadow-lg h-[450px]">
               <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3048.0353396833675!2d44.51001397508212!3d40.18602696964994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x406abd2e458b293f%3A0x64f1ea768340ed65!2sKings%20Love%20Meat!5e0!3m2!1sen!2sam!4v1746940439873!5m2!1sen!2sam" 
                 width="100%" 
