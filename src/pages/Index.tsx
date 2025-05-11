@@ -12,7 +12,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import MenuCard from '@/components/MenuCard';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { CommitsGridDemo } from '@/components/ui/commits-grid-demo';
+import { BackgroundBoxesDemo } from '@/components/ui/demo';
 import { 
   Carousel, 
   CarouselContent, 
@@ -100,11 +100,11 @@ const Index: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      {/* Welcome message with CommitsGrid */}
+      {/* Welcome message with gravity physics demo */}
       <div className="w-full py-12 bg-white flex flex-col items-center justify-center">
         <h2 className="text-3xl md:text-4xl font-serif font-bold text-brand-blue mb-6">Welcome to</h2>
         <div className="w-full max-w-3xl mx-auto px-4">
-          <CommitsGridDemo />
+          <BackgroundBoxesDemo />
         </div>
       </div>
       
@@ -260,35 +260,68 @@ const Index: React.FC = () => {
         </div>
       </section>
       
-      {/* About Section */}
-      <section className="py-20 royal-bg text-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10">
-              <img 
-                src="https://images.unsplash.com/photo-1465379944081-7f47de8d74ac" 
-                alt="About Kings Love Meat" 
-                className="w-full h-[450px] object-cover rounded-lg shadow-2xl"
-              />
-            </div>
-            <div className="md:w-1/2 md:pl-10">
-              <Crown className="text-brand-gold mb-4" size={36} />
-              <h2 className="text-3xl md:text-5xl font-bold mb-6 text-brand-gold">{t('about.title')}</h2>
-              <div className="h-1 w-20 bg-brand-gold mb-6"></div>
-              <p className="text-lg mb-8 leading-relaxed">{t('about.content')}</p>
-              <Button 
-                asChild
-                className="royal-btn bg-brand-gold hover:bg-white hover:text-brand-blue text-white transition-colors px-8 py-3 rounded-md text-lg"
-              >
-                <Link to="/about" className="inline-flex items-center">
-                  <span>{t('about.more')}</span>
-                  <ArrowRight size={20} className="ml-2" />
-                </Link>
-              </Button>
-            </div>
-          </div>
+      {/* About Section - This is being replaced with the gravity section */}
+      <div className="py-20 royal-bg text-white">
+        <div className="w-full h-[600px] relative overflow-hidden">
+          <Gravity gravity={{ x: 0, y: 1 }} className="w-full h-full">
+            <MatterBody
+              matterBodyOptions={{ friction: 0.5, restitution: 0.2, density: 0.002 }}
+              x="20%"
+              y="10%"
+            >
+              <div className="text-2xl sm:text-3xl md:text-4xl bg-brand-gold text-white rounded-full hover:cursor-pointer px-8 py-6 font-serif">
+                Royal
+              </div>
+            </MatterBody>
+            <MatterBody
+              matterBodyOptions={{ friction: 0.5, restitution: 0.2, density: 0.002 }}
+              x="40%"
+              y="30%"
+            >
+              <div className="text-2xl sm:text-3xl md:text-4xl bg-white text-brand-blue rounded-full hover:cursor-grab px-8 py-6 font-serif">
+                Premium
+              </div>
+            </MatterBody>
+            <MatterBody
+              matterBodyOptions={{ friction: 0.5, restitution: 0.2, density: 0.002 }}
+              x="70%"
+              y="15%"
+              angle={10}
+            >
+              <div className="text-2xl sm:text-3xl md:text-4xl bg-[#1f464d] text-white rounded-full hover:cursor-grab px-8 py-6 font-serif">
+                Quality
+              </div>
+            </MatterBody>
+            <MatterBody
+              matterBodyOptions={{ friction: 0.5, restitution: 0.2, density: 0.002 }}
+              x="30%"
+              y="50%"
+            >
+              <div className="text-2xl sm:text-3xl md:text-4xl bg-[#ff5941] text-white rounded-full hover:cursor-grab px-8 py-6 font-serif">
+                Flavor
+              </div>
+            </MatterBody>
+            <MatterBody
+              matterBodyOptions={{ friction: 0.5, restitution: 0.2, density: 0.002 }}
+              x="65%"
+              y="40%"
+            >
+              <div className="text-2xl sm:text-3xl md:text-4xl bg-orange-500 text-white rounded-full hover:cursor-grab px-8 py-6 font-serif">
+                Experience
+              </div>
+            </MatterBody>
+            <MatterBody
+              matterBodyOptions={{ friction: 0.5, restitution: 0.2, density: 0.002 }}
+              x="80%"
+              y="60%"
+            >
+              <div className="text-2xl sm:text-3xl md:text-4xl bg-[#ffd726] text-black rounded-full hover:cursor-grab px-8 py-6 font-serif">
+                Kings Love Meat
+              </div>
+            </MatterBody>
+          </Gravity>
         </div>
-      </section>
+      </div>
       
       {/* Instagram Feed Section */}
       <InstagramFeed />
