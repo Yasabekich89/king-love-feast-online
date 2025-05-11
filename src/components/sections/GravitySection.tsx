@@ -1,11 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { Gravity, MatterBody } from '@/components/ui/gravity';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { motion } from 'framer-motion';
 
 const GravitySection: React.FC = () => {
   const { meatTypes, language, isMeatTypesLoading } = useLanguage();
-  const [isVisible, setIsVisible] = useState(false);
   
   // Use only a subset of meat types for display
   const displayableMeatTypes = meatTypes.slice(0, 6);
@@ -16,13 +15,6 @@ const GravitySection: React.FC = () => {
       console.log("Meat types loaded:", meatTypes);
       console.log("Current language:", language);
     }
-    
-    // Small delay to ensure gravity component initializes properly
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 500);
-    
-    return () => clearTimeout(timer);
   }, [meatTypes, language]);
   
   const bgColors = [
@@ -34,6 +26,15 @@ const GravitySection: React.FC = () => {
     "bg-[#ffd726] text-black",
   ];
   
+  const initialPositions = [
+    { x: 20, y: 10, delay: 0.2 },
+    { x: 40, y: 30, delay: 0.3 },
+    { x: 70, y: 15, delay: 0.1 },
+    { x: 30, y: 50, delay: 0.4 },
+    { x: 65, y: 40, delay: 0.2 },
+    { x: 80, y: 60, delay: 0.5 },
+  ];
+  
   return (
     <div className="royal-bg text-white py-[50px]">
       <div className="container mx-auto">
@@ -43,103 +44,79 @@ const GravitySection: React.FC = () => {
            'Наш Выбор Мяса'}
         </h2>
         
-        <div className="w-full h-[400px] md:h-[500px] relative overflow-hidden border border-dashed border-brand-gold/30 rounded-lg">
-          {isVisible && (
-            <Gravity 
-              gravity={{
-                x: 0,
-                y: 1
-              }} 
-              className="w-full h-full"
-              debug={false}
-              autoStart={true}
-            >
-              {!isMeatTypesLoading && displayableMeatTypes.map((meatType, index) => {
-                // Calculate positions based on index
-                const positions = [
-                  { x: "20%", y: "10%" },
-                  { x: "40%", y: "30%" },
-                  { x: "70%", y: "15%", angle: 10 },
-                  { x: "30%", y: "50%" },
-                  { x: "65%", y: "40%" },
-                  { x: "80%", y: "60%" },
-                ];
-                
-                // Get current position based on index or default if index out of range
-                const position = positions[index] || { x: `${(index * 15) % 85}%`, y: `${(index * 20) % 65}%` };
-                
-                // Get the content in the current language or fall back to English
-                const content = meatType[language] || meatType.en;
-                
-                return (
-                  <MatterBody 
-                    key={meatType.id}
-                    matterBodyOptions={{
-                      friction: 0.5,
-                      restitution: 0.2,
-                      density: 0.002
-                    }}
-                    x={position.x}
-                    y={position.y}
-                    angle={position.angle || 0}
-                  >
-                    <div className={`text-2xl sm:text-3xl md:text-4xl ${bgColors[index % bgColors.length]} rounded-full hover:cursor-grab px-8 py-6 font-serif shadow-lg`}>
-                      {content}
-                    </div>
-                  </MatterBody>
-                );
-              })}
-              
-              {/* Show loading placeholder bubbles if meat types are still loading */}
-              {isMeatTypesLoading && Array(6).fill(0).map((_, index) => {
-                const positions = [
-                  { x: "20%", y: "10%" },
-                  { x: "40%", y: "30%" },
-                  { x: "70%", y: "15%", angle: 10 },
-                  { x: "30%", y: "50%" },
-                  { x: "65%", y: "40%" },
-                  { x: "80%", y: "60%" },
-                ];
-                
-                const position = positions[index];
-                
-                return (
-                  <MatterBody 
-                    key={`loading-${index}`}
-                    matterBodyOptions={{
-                      friction: 0.5,
-                      restitution: 0.2,
-                      density: 0.002
-                    }}
-                    x={position.x}
-                    y={position.y}
-                    angle={position.angle || 0}
-                  >
-                    <div className={`text-2xl sm:text-3xl md:text-4xl ${bgColors[index]} rounded-full hover:cursor-grab px-8 py-6 font-serif animate-pulse shadow-lg`}>
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </div>
-                  </MatterBody>
-                );
-              })}
-            </Gravity>
-          )}
+        <div className="w-full h-[400px] md:h-[500px] relative overflow-hidden border border-dashed border-brand-gold/30 rounded-lg bg-[#0A3D4F]/60">
+          {/* Animated meat type bubbles using framer-motion */}
+          {!isMeatTypesLoading && displayableMeatTypes.map((meatType, index) => {
+            const position = initialPositions[index] || { 
+              x: (index * 15) % 85, 
+              y: (index * 20) % 65, 
+              delay: 0.1 * index 
+            };
+            
+            // Get the content in the current language or fall back to English
+            const content = meatType[language] || meatType.en;
+            
+            return (
+              <motion.div
+                key={meatType.id}
+                className={`absolute text-2xl sm:text-3xl md:text-4xl ${bgColors[index % bgColors.length]} rounded-full px-8 py-6 font-serif shadow-lg cursor-grab select-none`}
+                initial={{ 
+                  x: `${position.x}%`, 
+                  y: `${position.y}%`, 
+                  opacity: 0, 
+                  scale: 0.8 
+                }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: 1,
+                  x: `${position.x}%`, 
+                  y: `${position.y}%` 
+                }}
+                transition={{
+                  delay: position.delay,
+                  duration: 0.5,
+                  type: "spring",
+                  damping: 10
+                }}
+                drag
+                dragConstraints={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0
+                }}
+                dragElastic={0.2}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {content}
+              </motion.div>
+            );
+          })}
           
-          {/* Fallback display in case Gravity component doesn't initialize properly */}
-          {!isVisible && !isMeatTypesLoading && displayableMeatTypes.length > 0 && (
-            <div className="w-full h-full flex flex-wrap justify-center items-center gap-4 p-4">
-              {displayableMeatTypes.map((meatType, index) => {
-                const content = meatType[language] || meatType.en;
-                return (
-                  <div 
-                    key={meatType.id}
-                    className={`text-2xl sm:text-3xl md:text-4xl ${bgColors[index % bgColors.length]} rounded-full px-8 py-6 font-serif shadow-lg`}
-                  >
-                    {content}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          {/* Show loading placeholder bubbles if meat types are still loading */}
+          {isMeatTypesLoading && Array(6).fill(0).map((_, index) => {
+            const position = initialPositions[index];
+            
+            return (
+              <motion.div
+                key={`loading-${index}`}
+                className={`absolute text-2xl sm:text-3xl md:text-4xl ${bgColors[index]} rounded-full px-8 py-6 font-serif animate-pulse shadow-lg`}
+                initial={{ 
+                  x: `${position.x}%`, 
+                  y: `${position.y}%`, 
+                  opacity: 0 
+                }}
+                animate={{ 
+                  opacity: 0.7,
+                  x: `${position.x}%`, 
+                  y: `${position.y}%` 
+                }}
+              >
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </div>
