@@ -1,7 +1,7 @@
 
 /* Responsive fixes to prevent horizontal scrolling */
 
-/* Add global overflow protection */
+/* Add targeted overflow protection but exempt animation containers */
 html, body, #root {
   overflow-x: hidden;
   width: 100%;
@@ -41,8 +41,8 @@ iframe {
   margin-right: 0;
 }
 
-/* Ensure all sections are contained */
-section {
+/* Ensure all sections are contained except hero animations */
+section:not(.h-[350vh]) {
   overflow-x: hidden;
 }
 
@@ -52,8 +52,21 @@ section {
   box-sizing: border-box;
 }
 
-/* Fix hero gallery overflow */
-.ContainerScroll, .ContainerScale {
+/* Special Instagram feed fixes */
+#instagram-section .instagram-post-container {
+  width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
+}
+
+/* Ensure carousel items don't cause horizontal scroll */
+.embla {
+  overflow: hidden;
+}
+
+/* Ensure Contact page map container is responsive */
+.contact-map-container {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }

@@ -4,7 +4,6 @@
   margin: 0;
   padding: 0;
   text-align: center;
-  overflow-x: hidden;  /* Prevent horizontal scroll */
 }
 
 .logo {
@@ -45,12 +44,15 @@
 
 /* Mobile-specific fixes */
 @media (max-width: 767px) {
-  img, video, iframe {
+  img, video {
     max-width: 100% !important;
   }
   
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }

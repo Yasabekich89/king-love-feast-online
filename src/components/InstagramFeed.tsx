@@ -131,7 +131,7 @@ const InstagramFeed: React.FC = () => {
         {isVisible && (
           <>
             {isMobile ? (
-              <div className="relative">
+              <div className="relative max-w-full overflow-hidden">
                 <Carousel className="w-full" setApi={setApi}>
                   <CarouselContent>
                     {instagramPosts.map((post) => (
@@ -159,7 +159,7 @@ const InstagramFeed: React.FC = () => {
                 </Carousel>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-full overflow-hidden">
                 {/* Instagram Posts Container - Using the provided embed codes but with custom styling */}
                 {instagramPosts.map((post) => (
                   <div key={post.id} className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px]">

@@ -20,7 +20,7 @@ const Index: React.FC = () => {
   });
   
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col relative">
       <PerformanceMonitor />
       
       {/* Scroll progress indicator */}
@@ -31,12 +31,12 @@ const Index: React.FC = () => {
       
       <Header />
       
-      {/* Hero Gallery Section - Critical for first render */}
-      <div className="w-full overflow-hidden">
+      {/* Hero Gallery Section - Critical for first render - allowed to overflow for animation */}
+      <div className="w-full">
         <HeroGallerySection />
       </div>
       
-      {/* Lazy load non-critical sections */}
+      {/* Lazy load non-critical sections - with overflow protection */}
       <div className="w-full overflow-hidden">
         <Suspense fallback={<div className="py-16 flex justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
