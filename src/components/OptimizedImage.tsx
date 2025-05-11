@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { getOptimizedImageUrl, getOptimalImageWidth } from '@/utils/performance-utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface OptimizedImageProps {
   src: string;
@@ -61,6 +62,26 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     setError(true);
     if (onError) onError();
   };
+
+  // Determine image category (for fallback)
+  const getImageCategory = () => {
+    if (!src) return 'generic';
+    if (src.toLowerCase().includes('burger') || src.toLowerCase().includes('sandwich')) return 'burger';
+    if (src.toLowerCase().includes('steak') || src.toLowerCase().includes('meat')) return 'steak';
+    if (src.toLowerCase().includes('dessert') || src.toLowerCase().includes('cake')) return 'dessert';
+    return 'generic';
+  };
+
+  // Fallback images by category
+  const getFallbackImage = () => {
+    const category = getImageCategory();
+    switch(category) {
+      case 'burger': return 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80';
+      case 'steak': return 'https://images.unsplash.com/photo-1504973960431-1c467e159aa4?w=800&q=80';
+      case 'dessert': return 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80';
+      default: return 'https://images.unsplash.com/photo-1546241072-48010ad2862c?w=800&q=80';
+    }
+  };
   
   return (
     <div 
@@ -68,15 +89,22 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       className={`relative overflow-hidden ${containerClassName}`}
       style={{ height: height ? `${height}px` : 'auto' }}
     >
-      {/* Show a loading placeholder until the image loads */}
+      {/* Show a loading skeleton until the image loads */}
       {!isLoaded && !error && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Skeleton className="w-full h-full" />
+        </div>
       )}
       
       {/* Show error placeholder if the image fails to load */}
       {error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-500">
-          <span>Image not available</span>
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500">
+          <img 
+            src={getFallbackImage()} 
+            alt="Fallback" 
+            className={className}
+            onLoad={() => setIsLoaded(true)}
+          />
         </div>
       )}
       

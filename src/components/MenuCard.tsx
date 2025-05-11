@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Badge } from "@/components/ui/badge";
 import OptimizedImage from './OptimizedImage';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface MenuItemProps {
   id: string;
@@ -44,16 +45,17 @@ const MenuCard: React.FC<MenuItemProps> = ({
   return (
     <div 
       id={id}
-      className="menu-card overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 h-full flex flex-col"
+      className="menu-card overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 h-full flex flex-col hover:shadow-xl group"
     >
       <div className="p-4 pb-0">
-        <div className="relative bg-gray-50 rounded-lg overflow-hidden">
+        <div className="relative bg-gradient-to-b from-gray-50 to-gray-100 rounded-lg overflow-hidden">
           <AspectRatio ratio={4/3} className="w-full">
             <OptimizedImage 
               src={imageSrc} 
               alt={t(titleKey)} 
-              className="w-full h-full object-contain p-2" 
+              className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105" 
               containerClassName="flex items-center justify-center" 
+              priority={isPopular} // Prioritize loading popular items
             />
             {isPopular && (
               <div className="absolute top-4 right-4">
