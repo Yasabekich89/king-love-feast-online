@@ -103,20 +103,20 @@ const ReservationForm: React.FC = () => {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
-      className="bg-white backdrop-blur-sm bg-opacity-95 p-6 md:p-8 rounded-xl shadow-xl border border-gray-100"
+      className="bg-white backdrop-blur-sm bg-opacity-95 p-4 sm:p-6 md:p-8 rounded-xl shadow-xl border border-gray-100"
     >
       <motion.div 
         variants={zoomIn}
-        className="text-center mb-6"
+        className="text-center mb-4 sm:mb-6"
       >
         <Crown className="mx-auto text-brand-gold mb-2" size={32} />
-        <h3 className="text-2xl md:text-3xl font-bold text-brand-blue">{t('reservation.title')}</h3>
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-brand-blue">{t('reservation.title')}</h3>
         <div className="gold-divider"></div>
-        <p className="text-gray-600 mt-2">Experience luxury dining with us</p>
+        <p className="text-sm sm:text-base text-gray-600 mt-2">Experience luxury dining with us</p>
       </motion.div>
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4 sm:mt-6">
           <motion.div 
             variants={containerVariants}
             initial="hidden"
@@ -130,21 +130,21 @@ const ReservationForm: React.FC = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-brand-blue font-medium">{t('reservation.name')}*</FormLabel>
+                    <FormLabel className="text-sm sm:text-base text-brand-blue font-medium">{t('reservation.name')}*</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         className="transition-all duration-200 focus:ring-brand-gold hover:border-brand-gold/50"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs sm:text-sm" />
                   </FormItem>
                 )}
               />
             </motion.div>
             
-            {/* Date and Time Fields - Keeping them in the same row on all screen sizes */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Date and Time Fields - Keeping them in the same row on all screen sizes with enforced grid layout */}
+            <div className="grid grid-cols-2 gap-2 sm:gap-4">
               {/* Date Field */}
               <motion.div variants={itemVariants}>
                 <FormField
@@ -152,23 +152,23 @@ const ReservationForm: React.FC = () => {
                   name="date"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel className="text-brand-blue font-medium">{t('reservation.date')}*</FormLabel>
+                      <FormLabel className="text-sm sm:text-base text-brand-blue font-medium">{t('reservation.date')}*</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full pl-3 text-left font-normal transition-all duration-200 border focus:ring-brand-gold hover:border-brand-gold/50",
+                                "w-full pl-2 sm:pl-3 text-xs sm:text-sm text-left font-normal transition-all duration-200 border focus:ring-brand-gold hover:border-brand-gold/50",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
                               {field.value ? (
-                                format(field.value, "PPP")
+                                <span className="truncate">{format(field.value, "MMM dd")}</span>
                               ) : (
-                                <span>Pick a date</span>
+                                <span className="truncate">Pick date</span>
                               )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              <CalendarIcon className="ml-auto h-3 w-3 sm:h-4 sm:w-4 opacity-50 flex-shrink-0" />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
@@ -185,7 +185,7 @@ const ReservationForm: React.FC = () => {
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormMessage />
+                      <FormMessage className="text-xs sm:text-sm" />
                     </FormItem>
                   )}
                 />
@@ -198,30 +198,30 @@ const ReservationForm: React.FC = () => {
                   name="time"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-brand-blue font-medium">{t('reservation.time')}*</FormLabel>
+                      <FormLabel className="text-sm sm:text-base text-brand-blue font-medium">{t('reservation.time')}*</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
                               variant="outline"
                               className={cn(
-                                "w-full pl-3 text-left font-normal transition-all duration-200 border focus:ring-brand-gold hover:border-brand-gold/50",
+                                "w-full pl-2 sm:pl-3 text-xs sm:text-sm text-left font-normal transition-all duration-200 border focus:ring-brand-gold hover:border-brand-gold/50",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
-                              {field.value || "Select time"}
-                              <Clock className="ml-auto h-4 w-4 opacity-50" />
+                              <span className="truncate">{field.value || "Select time"}</span>
+                              <Clock className="ml-auto h-3 w-3 sm:h-4 sm:w-4 opacity-50 flex-shrink-0" />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent className="w-52 p-0" align="start">
+                        <PopoverContent className="w-48 sm:w-52 p-0" align="start">
                           <div className="grid max-h-72 overflow-y-auto p-2">
                             {timeSlots.map((time) => (
                               <Button
                                 key={time}
                                 variant="ghost"
                                 className={cn(
-                                  "justify-start font-normal",
+                                  "justify-start text-xs sm:text-sm font-normal",
                                   field.value === time && "bg-brand-blue/10 text-brand-blue font-medium"
                                 )}
                                 onClick={() => {
@@ -235,7 +235,7 @@ const ReservationForm: React.FC = () => {
                           </div>
                         </PopoverContent>
                       </Popover>
-                      <FormMessage />
+                      <FormMessage className="text-xs sm:text-sm" />
                     </FormItem>
                   )}
                 />
@@ -250,7 +250,7 @@ const ReservationForm: React.FC = () => {
                   name="guests"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-brand-blue font-medium">{t('reservation.guests')}*</FormLabel>
+                      <FormLabel className="text-sm sm:text-base text-brand-blue font-medium">{t('reservation.guests')}*</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
@@ -258,12 +258,12 @@ const ReservationForm: React.FC = () => {
                             type="number"
                             min="1"
                             max="20"
-                            className="transition-all duration-200 focus:ring-brand-gold hover:border-brand-gold/50 pl-9"
+                            className="transition-all duration-200 focus:ring-brand-gold hover:border-brand-gold/50 pl-8 sm:pl-9 text-xs sm:text-sm"
                           />
-                          <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Users className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
                         </div>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs sm:text-sm" />
                     </FormItem>
                   )}
                 />
@@ -276,15 +276,15 @@ const ReservationForm: React.FC = () => {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-brand-blue font-medium">{t('reservation.phone')}*</FormLabel>
+                      <FormLabel className="text-sm sm:text-base text-brand-blue font-medium">{t('reservation.phone')}*</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           type="tel"
-                          className="transition-all duration-200 focus:ring-brand-gold hover:border-brand-gold/50"
+                          className="transition-all duration-200 focus:ring-brand-gold hover:border-brand-gold/50 text-xs sm:text-sm"
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs sm:text-sm" />
                     </FormItem>
                   )}
                 />
@@ -298,15 +298,15 @@ const ReservationForm: React.FC = () => {
                 name="specialRequests"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-brand-blue font-medium">{t('reservation.special')}</FormLabel>
+                    <FormLabel className="text-sm sm:text-base text-brand-blue font-medium">{t('reservation.special')}</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
                         rows={3}
-                        className="transition-all duration-200 focus:ring-brand-gold hover:border-brand-gold/50 resize-none"
+                        className="transition-all duration-200 focus:ring-brand-gold hover:border-brand-gold/50 resize-none text-xs sm:text-sm"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs sm:text-sm" />
                   </FormItem>
                 )}
               />
@@ -319,7 +319,7 @@ const ReservationForm: React.FC = () => {
           >
             <Button 
               type="submit" 
-              className="w-full bg-brand-blue hover:bg-brand-gold transition-colors duration-300 shine-effect text-white font-medium py-3 text-base"
+              className="w-full bg-brand-blue hover:bg-brand-gold transition-colors duration-300 shine-effect text-white font-medium py-2 sm:py-3 text-sm sm:text-base"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

@@ -51,7 +51,7 @@ const HeroGallerySection: React.FC = () => {
       <ContainerScale className="relative z-10 text-center">
         <Crown className="mx-auto text-brand-gold mb-6" size={60} />
         
-        <h1 className="max-w-xl text-5xl md:text-7xl font-bold tracking-tighter text-white font-serif">
+        <h1 className="max-w-xl text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-white font-serif">
           {titleLetters.map((letter, index) => (
             <motion.span 
               key={index} 
@@ -76,14 +76,14 @@ const HeroGallerySection: React.FC = () => {
           transition={{ delay: 1, duration: 0.5 }}
         />
         
-        <p className="my-6 max-w-xl text-sm md:text-xl text-white opacity-90">
+        <p className="my-6 max-w-xl text-xs sm:text-sm md:text-xl text-white opacity-90">
           {t('hero.subtitle')}
         </p>
         
         <div className="flex items-center justify-center gap-4">
           <Button 
             asChild
-            className="royal-btn bg-brand-gold hover:bg-brand-blue text-white border-2 border-brand-gold hover:border-brand-blue transition-all duration-300 text-lg px-8 py-6 rounded-md shadow-lg relative overflow-hidden group"
+            className="royal-btn bg-brand-gold hover:bg-brand-blue text-white border-2 border-brand-gold hover:border-brand-blue transition-all duration-300 text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-md shadow-lg relative overflow-hidden group"
           >
             <Link to="/reservations">
               <motion.span 
@@ -102,7 +102,7 @@ const HeroGallerySection: React.FC = () => {
             className="bg-transparent px-4 py-2 font-medium text-white hover:text-brand-gold"
           >
             <Link to="/menu">
-              {t('menu.viewMenu')}
+              {t('nav.menu')}
             </Link>
           </Button>
         </div>

@@ -118,9 +118,9 @@ const Header: React.FC = () => {
               {t('nav.contact')}
             </Link>
             
-            {/* Mobile language switcher - Removed label */}
+            {/* Mobile language switcher - Centered flags */}
             <div className="flex flex-col border-t border-gray-200 pt-4 mt-2">
-              <div className="flex space-x-4">
+              <div className="flex justify-center space-x-6">
                 <button 
                   className={`flex items-center justify-center ${language === 'en' ? 'ring-2 ring-brand-gold' : ''}`}
                   onClick={() => setLanguage('en')}
