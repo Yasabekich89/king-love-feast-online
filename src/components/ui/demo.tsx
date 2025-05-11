@@ -53,7 +53,6 @@ export function BackgroundBoxesDemo() {
               Quality
             </div>
           </MatterBody>
-          {/* Removed the last two MatterBody components (Taste and Experience) */}
         </Gravity>
       </div>
     </div>

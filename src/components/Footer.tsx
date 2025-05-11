@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Instagram, MapPin, Clock, Phone, Facebook } from 'lucide-react';
+import { FooterBackground } from './FooterBackground';
 
 const TikTokIcon = ({ size = 24, className = '' }) => (
   <svg 
@@ -26,8 +28,12 @@ const Footer: React.FC = () => {
   const { t } = useLanguage();
   
   return (
-    <footer className="bg-brand-blue text-white py-12">
-      <div className="container mx-auto px-4">
+    <footer className="bg-brand-blue text-white py-12 relative overflow-hidden">
+      {/* Background animation */}
+      <FooterBackground />
+      
+      {/* Footer content - with higher z-index to appear above the animation */}
+      <div className="container mx-auto px-4 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <p className="text-gray-300 max-w-xs">

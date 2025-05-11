@@ -8,17 +8,17 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
   const rows = new Array(150).fill(1);
   const cols = new Array(100).fill(1);
   
-  // Using direct color values instead of CSS variables
+  // Using footer-appropriate darker colors
   const colors = [
-    "rgb(125 211 252)", // sky-300
-    "rgb(249 168 212)", // pink-300
-    "rgb(134 239 172)", // green-300
-    "rgb(253 224 71)",  // yellow-300
-    "rgb(252 165 165)", // red-300
-    "rgb(216 180 254)", // purple-300
-    "rgb(147 197 253)", // blue-300
-    "rgb(165 180 252)", // indigo-300
-    "rgb(196 181 253)", // violet-300
+    "rgb(30, 41, 59)", // slate-800
+    "rgb(15, 23, 42)", // slate-900
+    "rgb(17, 24, 39)", // gray-900
+    "rgb(31, 41, 55)", // gray-800
+    "rgb(30, 58, 138)", // blue-900
+    "rgb(30, 64, 175)", // indigo-900
+    "rgb(76, 29, 149)", // purple-900
+    "rgb(198, 146, 20, 0.3)", // brand-gold with opacity
+    "rgb(10, 61, 79, 0.5)", // brand-blue with opacity
   ];
 
   const getRandomColor = () => {
