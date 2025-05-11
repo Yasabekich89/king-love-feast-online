@@ -90,3 +90,23 @@
     min-height: 400px;
   }
 }
+
+/* Commits Grid Animation Helpers */
+@keyframes highlight-animation {
+  0% { background-color: transparent; }
+  100% { background-color: var(--highlight, #48d55d); }
+}
+
+@keyframes flash-animation {
+  0% { background-color: var(--card-bg, white); }
+  50% { background-color: var(--highlight, #016d32); }
+  100% { background-color: var(--card-bg, white); }
+}
+
+.animate-highlight {
+  animation: highlight-animation 0.6s ease forwards;
+}
+
+.animate-flash {
+  animation: flash-animation 0.6s ease forwards;
+}

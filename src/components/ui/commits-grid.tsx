@@ -69,17 +69,27 @@ export const CommitsGrid = ({ text }: { text: string }) => {
   const getRandomDelay = () => `${(Math.random() * 0.6).toFixed(1)}s`;
   const getRandomFlash = () => +(Math.random() < 0.3);
 
+  // Create a ref to store calculated colors
+  const cellColors = React.useRef<string[]>([]);
+  
+  // Initialize on first render
+  React.useEffect(() => {
+    cellColors.current = Array.from({ length: gridWidth * gridHeight }, () => getRandomColor());
+  }, [gridWidth, gridHeight]);
+
   return (
     <section
       className="w-full max-w-xl bg-card border grid p-1.5 sm:p-3 gap-0.5 sm:gap-1 rounded-[10px] sm:rounded-[15px]"
       style={{
         gridTemplateColumns: `repeat(${gridWidth}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${gridHeight}, minmax(0, 1fr))`,
-      }}
+        "--card-bg": "hsl(var(--card))",
+      } as CSSProperties}
     >
       {Array.from({ length: gridWidth * gridHeight }).map((_, index) => {
         const isHighlighted = highlightedCells.includes(index);
         const shouldFlash = !isHighlighted && getRandomFlash();
+        const color = cellColors.current[index] || getRandomColor();
 
         return (
           <div
@@ -93,7 +103,7 @@ export const CommitsGrid = ({ text }: { text: string }) => {
             style={
               {
                 animationDelay: getRandomDelay(),
-                "--highlight": getRandomColor(),
+                "--highlight": color,
               } as CSSProperties
             }
           />
