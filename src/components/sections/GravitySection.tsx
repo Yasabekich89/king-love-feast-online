@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { Gravity, MatterBody } from '@/components/ui/gravity';
+
 const GravitySection: React.FC = () => {
   return <div className="royal-bg text-white py-[50px]">
-      <div className="w-full h-[600px] relative overflow-hidden">
+      <div className="w-full h-[300px] relative overflow-hidden">
         <Gravity gravity={{
         x: 0,
         y: 1
@@ -65,4 +67,5 @@ const GravitySection: React.FC = () => {
       </div>
     </div>;
 };
+
 export default GravitySection;
