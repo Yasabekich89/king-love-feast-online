@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
@@ -94,10 +93,16 @@
 
   body {
     @apply bg-background text-foreground font-sans pt-16 md:pt-24;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif font-bold text-brand-blue;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
@@ -194,4 +199,126 @@
 .royal-btn span {
   position: relative;
   z-index: 2;
+}
+
+/* New animation styles */
+.perspective-lg {
+  perspective: 1000px;
+}
+
+.rotate-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+}
+
+.rotate-3d:hover {
+  transform: rotate3d(1, 1, 0, 5deg);
+}
+
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(45deg);
+  transition: all 0.3s;
+}
+
+.shine-effect:hover::after {
+  transform: rotate(45deg) translateX(100%) translateY(-100%);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, #C69214, #e3b140);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Floating animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.floating-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Instagram Feed enhancements */
+.instagram-post-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.instagram-post-container:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.instagram-media {
+  transition: all 0.3s ease !important;
+}
+
+@media (max-width: 768px) {
+  .instagram-post-container {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Custom Instagram Placeholder */
+.instagram-placeholder {
+  aspect-ratio: 1 / 1;
+  background-color: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.instagram-placeholder .instagram-icon {
+  color: #C69214;
+  margin-bottom: 1rem;
+}
+
+/* Make Instagram embeds responsive */
+.instagram-media {
+  min-width: 100% !important;
+  width: 100% !important;
+  min-height: 500px;
+}
+
+@media (max-width: 640px) {
+  .instagram-media {
+    min-height: 400px;
+  }
+}
+
+/* Commits Grid Animation Helpers */
+@keyframes highlight-animation {
+  0% { background-color: transparent; }
+  100% { background-color: var(--highlight, #48d55d); }
+}
+
+@keyframes flash-animation {
+  0% { background-color: var(--card-bg, white); }
+  50% { background-color: var(--highlight, #016d32); }
+  100% { background-color: var(--card-bg, white); }
+}
+
+.animate-highlight {
+  animation: highlight-animation 0.6s ease forwards;
+}
+
+.animate-flash {
+  animation: flash-animation 0.6s ease forwards;
 }
