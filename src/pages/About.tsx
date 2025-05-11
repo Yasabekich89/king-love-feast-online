@@ -199,9 +199,7 @@ const About = () => {
           >
             {values.map((value, index) => (
               <motion.div key={index} variants={itemVariants}>
-                <div className="rounded-lg p-6 h-full bg-gradient-to-br text-white shadow-lg" 
-                     style={{ backgroundImage: `linear-gradient(135deg, var(--tw-gradient-stops))` }}
-                     className={`rounded-lg p-6 h-full bg-gradient-to-br ${value.color} text-white shadow-lg`}>
+                <div className={`rounded-lg p-6 h-full bg-gradient-to-br ${value.color} text-white shadow-lg`}>
                   <h3 className="text-2xl font-serif mb-4">{value.title}</h3>
                   <p>{value.description}</p>
                 </div>
