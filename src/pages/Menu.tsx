@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, Suspense, lazy } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -7,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Tables } from '@/integrations/supabase/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MenuLampDemo } from '@/components/ui/menu-lamp-demo';
 
 // Lazy load components that are not immediately visible
 const MenuFilters = lazy(() => import('@/components/MenuFilters'));
@@ -131,14 +131,12 @@ const Menu: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      {/* Hero Section */}
-      <div className="relative bg-brand-blue py-16">
-        <div className="crown-pattern absolute inset-0 opacity-10"></div>
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl font-serif text-brand-gold mb-4">{t('menu.title')}</h1>
-          <p className="text-white text-lg max-w-2xl mx-auto">{t('menu.subtitle')}</p>
-        </div>
-      </div>
+      {/* Replace Hero Section with MenuLampDemo */}
+      <Suspense fallback={<div className="h-[400px] md:h-[500px] bg-brand-blue flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-gold"></div>
+      </div>}>
+        <MenuLampDemo />
+      </Suspense>
       
       <div className="container mx-auto px-4 py-12 flex-grow">
         <div className="flex items-center justify-between mb-8">
