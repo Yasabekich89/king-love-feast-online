@@ -15,6 +15,7 @@ import {
   CarouselNext, 
   CarouselPrevious 
 } from '@/components/ui/carousel';
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const FeaturedMenuSection: React.FC = () => {
   const { t } = useLanguage();
@@ -128,14 +129,16 @@ const FeaturedMenuSection: React.FC = () => {
                     <CarouselItem key={item.id}>
                       <div className="px-2">
                         <Card className="menu-card overflow-hidden rounded-lg">
-                          <div className="h-60 overflow-hidden bg-gray-50">
-                            <img 
-                              src={item.image} 
-                              alt={item.name} 
-                              className="w-full h-full object-contain" // Changed from object-cover to object-contain
-                            />
+                          <div className="p-4">
+                            <AspectRatio ratio={4/3} className="bg-gray-50 rounded-lg overflow-hidden">
+                              <img 
+                                src={item.image} 
+                                alt={item.name} 
+                                className="w-full h-full object-contain p-2" 
+                              />
+                            </AspectRatio>
                           </div>
-                          <CardContent className="p-6">
+                          <CardContent className="p-6 pt-2">
                             <div className="flex items-center mb-3">
                               {item.icon}
                               <h3 className="text-2xl font-bold ml-2 text-brand-blue">{item.name}</h3>
@@ -175,14 +178,16 @@ const FeaturedMenuSection: React.FC = () => {
             ) : (
               staticMenuItems.map((item) => (
                 <Card key={item.id} className="menu-card overflow-hidden rounded-lg">
-                  <div className="h-60 overflow-hidden bg-gray-50">
-                    <img 
-                      src={item.image} 
-                      alt={item.name} 
-                      className="w-full h-full object-contain" // Changed from object-cover to object-contain
-                    />
+                  <div className="p-4">
+                    <AspectRatio ratio={4/3} className="bg-gray-50 rounded-lg overflow-hidden">
+                      <img 
+                        src={item.image} 
+                        alt={item.name} 
+                        className="w-full h-full object-contain p-2" 
+                      />
+                    </AspectRatio>
                   </div>
-                  <CardContent className="p-6">
+                  <CardContent className="p-6 pt-2">
                     <div className="flex items-center mb-3">
                       {item.icon}
                       <h3 className="text-2xl font-bold ml-2 text-brand-blue">{item.name}</h3>

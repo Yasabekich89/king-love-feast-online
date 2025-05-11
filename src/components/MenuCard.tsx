@@ -3,6 +3,7 @@ import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Badge } from "@/components/ui/badge";
 import OptimizedImage from './OptimizedImage';
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface MenuItemProps {
   id: string;
@@ -45,20 +46,24 @@ const MenuCard: React.FC<MenuItemProps> = ({
       id={id}
       className="menu-card overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 h-full flex flex-col"
     >
-      <div className="relative overflow-hidden h-48">
-        <OptimizedImage 
-          src={imageSrc} 
-          alt={t(titleKey)} 
-          className="w-full h-full object-contain" // Changed from object-cover to object-contain
-          containerClassName="bg-gray-50" // Added light background for the image container
-        />
-        {isPopular && (
-          <div className="absolute top-4 right-4">
-            <Badge variant="destructive" className="bg-brand-gold text-white border-none font-serif">
-              {t('menu.popular')}
-            </Badge>
-          </div>
-        )}
+      <div className="p-4 pb-0">
+        <div className="relative bg-gray-50 rounded-lg overflow-hidden">
+          <AspectRatio ratio={4/3} className="w-full">
+            <OptimizedImage 
+              src={imageSrc} 
+              alt={t(titleKey)} 
+              className="w-full h-full object-contain p-2" 
+              containerClassName="flex items-center justify-center" 
+            />
+            {isPopular && (
+              <div className="absolute top-4 right-4">
+                <Badge variant="destructive" className="bg-brand-gold text-white border-none font-serif">
+                  {t('menu.popular')}
+                </Badge>
+              </div>
+            )}
+          </AspectRatio>
+        </div>
       </div>
       
       <div className="p-4 flex-grow flex flex-col">
