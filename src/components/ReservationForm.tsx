@@ -45,8 +45,8 @@ Phone: ${formData.phone}
 Special Requests: ${formData.specialRequests || 'None'}`
     );
     
-    // Create WhatsApp link
-    const whatsappUrl = `https://wa.me/37433647007?text=${message}`;
+    // Create WhatsApp link with the "+" sign for international format
+    const whatsappUrl = `https://wa.me/+37433647007?text=${message}`;
     
     // Open WhatsApp in new tab
     window.open(whatsappUrl, '_blank');
