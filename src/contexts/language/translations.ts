@@ -1,3 +1,4 @@
+
 import { Language } from './types';
 
 export const translations: Record<Language, Record<string, string>> = {
@@ -524,4 +525,59 @@ export const translations: Record<Language, Record<string, string>> = {
     'menu.kinglyTbone.price': '5600₽',
     
     'menu.queenlyChicken.title': 'Куриное блюдо Королевы',
-    'menu.queenlyChicken.description': 'Куриная грудка свободного выгула, обжа
+    'menu.queenlyChicken.description': 'Куриная грудка свободного выгула, обжаренная с травами и подается с соусом из белого вина',
+    'menu.queenlyChicken.price': '3400₽',
+    
+    'menu.royalBbq.title': 'Королевское BBQ ассорти',
+    'menu.royalBbq.description': 'Подборка премиального мяса, медленно копченного и глазированного нашим фирменным королевским соусом BBQ',
+    'menu.royalBbq.price': '6500₽',
+    
+    'menu.truffleFries.title': 'Трюфельный картофель фри',
+    'menu.truffleFries.description': 'Золотистый хрустящий картофель фри с трюфельным маслом, пармезаном и свежими травами',
+    'menu.truffleFries.price': '1200₽',
+    
+    'menu.mashedPotatoes.title': 'Картофельное пюре с добавками',
+    'menu.mashedPotatoes.description': 'Сливочное картофельное пюре с маслом, зеленым луком, кусочками бекона и расплавленным сыром',
+    'menu.mashedPotatoes.price': '1000₽',
+    
+    // Instagram section
+    'instagram.title': 'Следите за нашим королевским путешествием',
+    'instagram.subtitle': 'Последние публикации от @kingslovemeat',
+    'instagram.followUs': 'Подписывайтесь на нас в Instagram',
+    
+    // About section
+    'about.title': 'Наше королевское наследие',
+    'about.content': 'Kings Love Meat родился из страсти к исключительному качеству мяса и искусству идеального приготовления. Наши шеф-повара сочетают традиционные техники с инновационными вкусами, создавая гастрономический опыт, достойный королевской семьи.',
+    'about.more': 'Узнать больше',
+    
+    // Reservation section
+    'reservation.title': 'Забронируйте ваш королевский стол',
+    'reservation.name': 'Полное имя',
+    'reservation.date': 'Дата',
+    'reservation.time': 'Время',
+    'reservation.guests': 'Количество гостей',
+    'reservation.phone': 'Номер телефона',
+    'reservation.special': 'Особые пожелания',
+    'reservation.submit': 'Подтвердить бронирование',
+    'reservation.success': 'Ваше бронирование отправлено. Мы скоро подтвердим.',
+    
+    // Contact page
+    'contact.title': 'Свяжитесь с нами',
+    'contact.subtitle': 'Мы будем рады услышать от вас',
+    'contact.infoTitle': 'Контактная информация',
+    'contact.phone': 'Телефон и WhatsApp',
+    'contact.phoneDesc': 'Позвоните нам напрямую или напишите в WhatsApp',
+    'contact.address': 'Наш адрес',
+    'contact.findUs': 'Посетите нас для исключительного гастрономического опыта',
+    'contact.hours': 'Часы работы',
+    'contact.hoursDetails': 'Понедельник - Воскресенье: 12:00 - 23:00',
+    'contact.socialTitle': 'Подключайтесь к нам',
+    'contact.socialFollow': 'Следите за нами в социальных сетях для эксклюзивных обновлений и предложений',
+    'contact.findUsMap': 'Найдите нас на карте',
+    
+    // Footer
+    'footer.address': 'ул. Туманяна 38, Ереван, Армения',
+    'footer.hours': 'Открыто: Пн-Вс 12:00 - 23:00',
+    'footer.rights': 'Все права защищены',
+  },
+};
