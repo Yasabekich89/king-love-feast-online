@@ -127,9 +127,8 @@ const Header: React.FC = () => {
               {t('nav.contact')}
             </Link>
             
-            {/* Mobile language switcher - Updated for better presentation */}
-            <div className="flex flex-col border-t border-gray-200 pt-4 mt-2 space-y-2">
-              <div className="font-medium text-gray-500 pb-2">{t('nav.language')}</div>
+            {/* Mobile language switcher - Removed label */}
+            <div className="flex flex-col border-t border-gray-200 pt-4 mt-2">
               <div className="flex space-x-4">
                 <button 
                   className={`flex items-center justify-center ${language === 'en' ? 'ring-2 ring-brand-gold' : ''}`}
