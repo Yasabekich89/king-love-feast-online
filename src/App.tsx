@@ -15,6 +15,7 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminLogin from "./pages/admin/AdminLogin";
 import MeatTypesAdmin from "./pages/admin/MeatTypesAdmin";
+import { NavBarDemo } from "./components/ui/tubelight-navbar-demo";
 
 const queryClient = new QueryClient();
 
@@ -26,23 +27,26 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/reservations" element={<Reservations />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/menu" element={<Menu />} />
-              
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminProducts />} />
-                <Route path="products" element={<AdminProducts />} />
-                <Route path="meat-types" element={<MeatTypesAdmin />} />
-              </Route>
-              
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <NavBarDemo />
+            <div className="pt-20 sm:pt-24"> {/* Add padding to account for the fixed navbar */}
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/reservations" element={<Reservations />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/menu" element={<Menu />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminProducts />} />
+                  <Route path="products" element={<AdminProducts />} />
+                  <Route path="meat-types" element={<MeatTypesAdmin />} />
+                </Route>
+                
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>

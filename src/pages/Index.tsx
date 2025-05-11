@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import InstagramFeed from '@/components/InstagramFeed';
 import ReservationForm from '@/components/ReservationForm';
@@ -96,8 +95,6 @@ const Index: React.FC = () => {
   
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      
       {/* Hero Section */}
       <section className="relative h-[90vh] min-h-[600px] flex items-center">
         <div className="absolute inset-0 z-0">
