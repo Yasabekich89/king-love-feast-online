@@ -14,19 +14,8 @@ const Reservations: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      {/* Background Boxes Demo Section */}
+      {/* Background Boxes Demo Section with Reservation Title */}
       <BackgroundBoxesDemo />
-      
-      {/* Hero Section */}
-      <section className="relative py-16 bg-brand-blue">
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <Crown className="mx-auto text-brand-gold mb-4" size={40} />
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-            {t('reservation.title')}
-          </h1>
-          <div className="w-24 h-1 bg-brand-gold mx-auto"></div>
-        </div>
-      </section>
       
       {/* Reservation Form Section */}
       <section className="py-16 bg-gray-100 flex-grow">

@@ -11,10 +11,10 @@ export function BackgroundBoxesDemo() {
 
       <Boxes />
       <h1 className={cn("md:text-4xl text-xl text-white relative z-20")}>
-        Tailwind is Awesome
+        Reserve Your Royal Table
       </h1>
       <p className="text-center mt-2 text-neutral-300 relative z-20">
-        Framer motion is the best animation library ngl
+        Experience exceptional dining at our restaurant
       </p>
     </div>
   );
