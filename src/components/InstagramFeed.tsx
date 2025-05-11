@@ -2,6 +2,14 @@
 import React, { useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Instagram } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselNext, 
+  CarouselPrevious 
+} from '@/components/ui/carousel';
 
 // Function to load Instagram embed script
 const loadInstagramEmbedScript = () => {
@@ -24,11 +32,28 @@ const loadInstagramEmbedScript = () => {
 
 const InstagramFeed: React.FC = () => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     // Load Instagram embed script when component mounts
     loadInstagramEmbedScript();
   }, []);
+
+  // Instagram post data
+  const instagramPosts = [
+    {
+      id: 1,
+      permalink: "https://www.instagram.com/reel/DJcV8QtMvsA/",
+    },
+    {
+      id: 2,
+      permalink: "https://www.instagram.com/reel/DJYdSxHshNP/",
+    },
+    {
+      id: 3,
+      permalink: "https://www.instagram.com/reel/DJUGrhvMBbL/",
+    }
+  ];
 
   return (
     <section className="py-16 bg-gray-50">
@@ -39,35 +64,60 @@ const InstagramFeed: React.FC = () => {
           <div className="gold-divider mt-4"></div>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Instagram Posts Container - Using the provided embed codes but with custom styling */}
-          <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px]">
-            <blockquote 
-              className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
-              data-instgrm-permalink="https://www.instagram.com/reel/DJcV8QtMvsA/"
-              data-instgrm-version="14"
-              style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
-            ></blockquote>
+        {isMobile ? (
+          <div className="relative">
+            <Carousel className="w-full">
+              <CarouselContent>
+                {instagramPosts.map((post) => (
+                  <CarouselItem key={post.id}>
+                    <div className="px-2">
+                      <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px] h-full">
+                        <blockquote 
+                          className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
+                          data-instgrm-permalink={post.permalink}
+                          data-instgrm-version="14"
+                          style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
+                        ></blockquote>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2 lg:left-4" />
+              <CarouselNext className="right-2 lg:right-4" />
+            </Carousel>
           </div>
-          
-          <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px]">
-            <blockquote 
-              className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
-              data-instgrm-permalink="https://www.instagram.com/reel/DJYdSxHshNP/"
-              data-instgrm-version="14"
-              style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
-            ></blockquote>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Instagram Posts Container - Using the provided embed codes but with custom styling */}
+            <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px]">
+              <blockquote 
+                className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
+                data-instgrm-permalink="https://www.instagram.com/reel/DJcV8QtMvsA/"
+                data-instgrm-version="14"
+                style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
+              ></blockquote>
+            </div>
+            
+            <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px]">
+              <blockquote 
+                className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
+                data-instgrm-permalink="https://www.instagram.com/reel/DJYdSxHshNP/"
+                data-instgrm-version="14"
+                style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
+              ></blockquote>
+            </div>
+            
+            <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px]">
+              <blockquote 
+                className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
+                data-instgrm-permalink="https://www.instagram.com/reel/DJUGrhvMBbL/"
+                data-instgrm-version="14"
+                style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
+              ></blockquote>
+            </div>
           </div>
-          
-          <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px]">
-            <blockquote 
-              className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
-              data-instgrm-permalink="https://www.instagram.com/reel/DJUGrhvMBbL/"
-              data-instgrm-version="14"
-              style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
-            ></blockquote>
-          </div>
-        </div>
+        )}
         
         <div className="text-center mt-10">
           <a 
