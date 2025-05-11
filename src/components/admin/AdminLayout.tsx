@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { HomeIcon, UtensilsIcon, UserIcon, LogOutIcon } from 'lucide-react';
+import { HomeIcon, UtensilsIcon, UserIcon, LogOutIcon, Beef } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -49,6 +49,17 @@ const AdminLayout: React.FC = () => {
                 >
                   <UtensilsIcon size={18} />
                   <span>{t('admin.products')}</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/admin/meat-types"
+                  className={`flex items-center gap-2 px-6 py-3 hover:bg-brand-blue-dark ${
+                    isActive('/admin/meat-types') ? 'bg-brand-blue-dark border-l-4 border-brand-gold' : ''
+                  }`}
+                >
+                  <Beef size={18} />
+                  <span>{t('admin.meatTypes')}</span>
                 </Link>
               </li>
               <li>

@@ -14,6 +14,7 @@ import Menu from "./pages/Menu";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminLogin from "./pages/admin/AdminLogin";
+import MeatTypesAdmin from "./pages/admin/MeatTypesAdmin";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminProducts />} />
                 <Route path="products" element={<AdminProducts />} />
+                <Route path="meat-types" element={<MeatTypesAdmin />} />
               </Route>
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

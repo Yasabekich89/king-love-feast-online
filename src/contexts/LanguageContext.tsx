@@ -1,12 +1,18 @@
-
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Tables } from '@/integrations/supabase/types';
 
 type Language = 'en' | 'am' | 'ru';
+
+type MeatType = Tables<'meat_types'>;
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
   t: (key: string) => string;
+  meatTypes: MeatType[];
+  isMeatTypesLoading: boolean;
+  refreshMeatTypes: () => Promise<void>;
 }
 
 const translations: Record<Language, Record<string, string>> = {
@@ -51,12 +57,51 @@ const translations: Record<Language, Record<string, string>> = {
     'menu.category.platters': 'Platters',
     'menu.category.sides': 'Sides',
     
-    // Meat types
-    'menu.meatType.beef': 'Beef',
-    'menu.meatType.lamb': 'Lamb',
-    'menu.meatType.chicken': 'Chicken',
-    'menu.meatType.pork': 'Pork',
-    'menu.meatType.vegetarian': 'Vegetarian',
+    // Admin
+    'admin.title': 'Admin Panel',
+    'admin.dashboard': 'Dashboard',
+    'admin.products': 'Products',
+    'admin.meatTypes': 'Meat Types',
+    'admin.backToSite': 'Back to Site',
+    'admin.logoutSuccess': 'Logged Out Successfully',
+    'admin.loggedOutMessage': 'You have been logged out of the admin panel',
+    'admin.login.title': 'Admin Login',
+    'admin.login.email': 'Email',
+    'admin.login.password': 'Password',
+    'admin.login.submit': 'Login',
+    'admin.login.error': 'Login Error',
+    'admin.save': 'Save',
+    'admin.cancel': 'Cancel',
+    'admin.delete': 'Delete',
+    'admin.actions': 'Actions',
+    'admin.error': 'Error',
+    'admin.success': 'Success',
+    'admin.authRequired': 'Authentication required',
+    'admin.manageProducts': 'Manage Products',
+    'admin.addProduct': 'Add Product',
+    'admin.editProduct': 'Edit Product',
+    'admin.newProduct': 'New Product',
+    'admin.productDeleted': 'Product deleted successfully',
+    
+    // Meat Types Admin
+    'admin.meatType.title': 'Manage Meat Types',
+    'admin.meatType.addNew': 'Add New Meat Type',
+    'admin.meatType.key': 'Key',
+    'admin.meatType.english': 'English',
+    'admin.meatType.armenian': 'Armenian',
+    'admin.meatType.russian': 'Russian',
+    'admin.meatType.noMeatTypes': 'No meat types found',
+    'admin.meatType.editMeatType': 'Edit Meat Type',
+    'admin.meatType.newMeatType': 'New Meat Type',
+    'admin.meatType.createSuccess': 'Meat Type Created',
+    'admin.meatType.createSuccessDescription': 'The meat type was created successfully',
+    'admin.meatType.updateSuccess': 'Meat Type Updated',
+    'admin.meatType.updateSuccessDescription': 'The meat type was updated successfully',
+    'admin.meatType.deleteSuccess': 'Meat Type Deleted',
+    'admin.meatType.deleteSuccessDescription': 'The meat type was deleted successfully',
+    'admin.meatType.error': 'Meat Type Error',
+    'admin.meatType.confirmDelete': 'Confirm Deletion',
+    'admin.meatType.confirmDeleteMessage': 'Are you sure you want to delete this meat type? This action cannot be undone.',
     
     // Menu items
     'menu.kingRibeye.title': 'King\'s Ribeye',
@@ -173,12 +218,51 @@ const translations: Record<Language, Record<string, string>> = {
     'menu.category.platters': 'Սպասքեր',
     'menu.category.sides': 'Հավելումներ',
     
-    // Meat types
-    'menu.meatType.beef': 'Տավարի միս',
-    'menu.meatType.lamb': 'Գառան միս',
-    'menu.meatType.chicken': 'Հավի միս',
-    'menu.meatType.pork': 'Խոզի միս',
-    'menu.meatType.vegetarian': 'Բուսական',
+    // Admin
+    'admin.title': 'Ադմին վահանակ',
+    'admin.dashboard': 'Վահանակ',
+    'admin.products': 'Ապրանքներ',
+    'admin.meatTypes': 'Մսի տեսակներ',
+    'admin.backToSite': 'Վերադառնալ կայք',
+    'admin.logoutSuccess': 'Դուրս եկաք հաջողությամբ',
+    'admin.loggedOutMessage': 'Դուք դուրս եկաք ադմին վահանակից',
+    'admin.login.title': 'Ադմին մուտք',
+    'admin.login.email': 'Էլ․ հասցե',
+    'admin.login.password': 'Գաղտնաբառ',
+    'admin.login.submit': 'Մուտք',
+    'admin.login.error': 'Մուտքի սխալ',
+    'admin.save': 'Պահպանել',
+    'admin.cancel': 'Չեղարկել',
+    'admin.delete': 'Ջնջել',
+    'admin.actions': 'Գործողություններ',
+    'admin.error': 'Սխալ',
+    'admin.success': 'Հաջողություն',
+    'admin.authRequired': 'Պահանջվում է նույնականացում',
+    'admin.manageProducts': 'Կառավարել ապրանքները',
+    'admin.addProduct': 'Ավելացնել ապրանք',
+    'admin.editProduct': 'Խմբագրել ապրանքը',
+    'admin.newProduct': 'Նոր ապրանք',
+    'admin.productDeleted': 'Ապրանքը հաջողությամբ ջնջված է',
+    
+    // Meat Types Admin
+    'admin.meatType.title': 'Կառավարել մսի տեսակները',
+    'admin.meatType.addNew': 'Ավելացնել նոր մսի տեսակ',
+    'admin.meatType.key': 'Բանալի',
+    'admin.meatType.english': 'Անգլերեն',
+    'admin.meatType.armenian': 'Հայերեն',
+    'admin.meatType.russian': 'Ռուսերեն',
+    'admin.meatType.noMeatTypes': 'Մսի տեսակներ չեն գտնվել',
+    'admin.meatType.editMeatType': 'Խմբագրել մսի տեսակը',
+    'admin.meatType.newMeatType': 'Նոր մսի տեսակ',
+    'admin.meatType.createSuccess': 'Մսի տեսակը ստեղծված է',
+    'admin.meatType.createSuccessDescription': 'Մսի տեսակը հաջողությամբ ստեղծվել է',
+    'admin.meatType.updateSuccess': 'Մսի տեսակը թարմացված է',
+    'admin.meatType.updateSuccessDescription': 'Մսի տեսակը հաջողությամբ թարմացվել է',
+    'admin.meatType.deleteSuccess': 'Մսի տեսակը ջնջված է',
+    'admin.meatType.deleteSuccessDescription': 'Մսի տեսակը հաջողությամբ ջնջվել է',
+    'admin.meatType.error': 'Մսի տեսակի սխալ',
+    'admin.meatType.confirmDelete': 'Հաստատել ջնջումը',
+    'admin.meatType.confirmDeleteMessage': 'Դուք վստահ եք, որ ցանկանում եք ջնջել այս մսի տեսակը? Այս գործողությունը հնարավոր չէ շրջել։',
     
     // Menu items
     'menu.kingRibeye.title': 'Թագավորական Ռիբայ',
@@ -295,12 +379,51 @@ const translations: Record<Language, Record<string, string>> = {
     'menu.category.platters': 'Ассорти',
     'menu.category.sides': 'Гарниры',
     
-    // Meat types
-    'menu.meatType.beef': 'Говядина',
-    'menu.meatType.lamb': 'Ягнятина',
-    'menu.meatType.chicken': 'Курица',
-    'menu.meatType.pork': 'Свинина',
-    'menu.meatType.vegetarian': 'Вегетарианское',
+    // Admin
+    'admin.title': 'Панель администратора',
+    'admin.dashboard': 'Панель управления',
+    'admin.products': 'Продукты',
+    'admin.meatTypes': 'Виды мяса',
+    'admin.backToSite': 'Вернуться на сайт',
+    'admin.logoutSuccess': 'Выход выполнен успешно',
+    'admin.loggedOutMessage': 'Вы вышли из панели администратора',
+    'admin.login.title': 'Вход для администратора',
+    'admin.login.email': 'Электронная почта',
+    'admin.login.password': 'Пароль',
+    'admin.login.submit': 'Войти',
+    'admin.login.error': 'Ошибка входа',
+    'admin.save': 'Сохранить',
+    'admin.cancel': 'Отмена',
+    'admin.delete': 'Удалить',
+    'admin.actions': 'Действия',
+    'admin.error': 'Ошибка',
+    'admin.success': 'Успех',
+    'admin.authRequired': 'Требуется аутентификация',
+    'admin.manageProducts': 'Управление продуктами',
+    'admin.addProduct': 'Добавить продукт',
+    'admin.editProduct': 'Редактировать продукт',
+    'admin.newProduct': 'Новый продукт',
+    'admin.productDeleted': 'Продукт успешно удален',
+    
+    // Meat Types Admin
+    'admin.meatType.title': 'Управление видами мяса',
+    'admin.meatType.addNew': 'Добавить новый вид мяса',
+    'admin.meatType.key': 'Ключ',
+    'admin.meatType.english': 'Английский',
+    'admin.meatType.armenian': 'Армянский',
+    'admin.meatType.russian': 'Русский',
+    'admin.meatType.noMeatTypes': 'Виды мяса не найдены',
+    'admin.meatType.editMeatType': 'Редактировать вид мяса',
+    'admin.meatType.newMeatType': 'Новый вид мяса',
+    'admin.meatType.createSuccess': 'Вид мяса создан',
+    'admin.meatType.createSuccessDescription': 'Вид мяса успешно создан',
+    'admin.meatType.updateSuccess': 'Вид мяса обновлен',
+    'admin.meatType.updateSuccessDescription': 'Вид мяса успешно обновлен',
+    'admin.meatType.deleteSuccess': 'Вид мяса удален',
+    'admin.meatType.deleteSuccessDescription': 'Вид мяса успешно удален',
+    'admin.meatType.error': 'Ошибка вида мяса',
+    'admin.meatType.confirmDelete': 'Подтвердите удаление',
+    'admin.meatType.confirmDeleteMessage': 'Вы уверены, что хотите удалить этот вид мяса? Это действие нельзя отменить.',
     
     // Menu items
     'menu.kingRibeye.title': 'Королевский Рибай',
@@ -381,13 +504,49 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
+  const [meatTypes, setMeatTypes] = useState<MeatType[]>([]);
+  const [isMeatTypesLoading, setIsMeatTypesLoading] = useState(true);
+
+  // Fetch meat types from Supabase
+  const fetchMeatTypes = async () => {
+    try {
+      setIsMeatTypesLoading(true);
+      const { data, error } = await supabase
+        .from('meat_types')
+        .select('*')
+        .order('key');
+        
+      if (error) {
+        console.error('Error fetching meat types:', error);
+        return;
+      }
+      
+      setMeatTypes(data || []);
+    } catch (error) {
+      console.error('Error fetching meat types:', error);
+    } finally {
+      setIsMeatTypesLoading(false);
+    }
+  };
+
+  // Load meat types on component mount
+  useEffect(() => {
+    fetchMeatTypes();
+  }, []);
 
   const t = (key: string): string => {
     return translations[language][key] || key;
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ 
+      language, 
+      setLanguage, 
+      t, 
+      meatTypes, 
+      isMeatTypesLoading, 
+      refreshMeatTypes: fetchMeatTypes 
+    }}>
       {children}
     </LanguageContext.Provider>
   );

@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Tables } from '@/integrations/supabase/types';
+import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Tables } from '@/integrations/supabase/types';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -22,402 +29,364 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { X } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { Switch } from '@/components/ui/switch';
 
 type Product = Tables<'products'>;
-
-interface ProductFormProps {
+type Props = {
   product?: Product;
   onSuccess: () => void;
   onCancel: () => void;
-}
+};
 
-const ProductForm: React.FC<ProductFormProps> = ({ 
-  product, 
-  onSuccess, 
-  onCancel 
-}) => {
-  const { t } = useLanguage();
+const formSchema = z.object({
+  title_key: z.string().min(2, {
+    message: "Title key must be at least 2 characters.",
+  }),
+  description_key: z.string().min(2, {
+    message: "Description key must be at least 2 characters.",
+  }),
+  price_key: z.string().min(2, {
+    message: "Price key must be at least 2 characters.",
+  }),
+  category: z.string().min(1, {
+    message: "Category is required.",
+  }),
+  meat_type: z.array(z.string()).nonempty({
+    message: "At least one meat type is required.",
+  }),
+  spice_level: z.number().min(0).max(5),
+  is_popular: z.boolean(),
+  image_src: z.string().nullable(),
+});
+
+const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
+  const { t, meatTypes } = useLanguage();
+  const { user } = useAuth();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedMeatTypes, setSelectedMeatTypes] = useState<string[]>([]);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(product?.image_src || null);
-
-  const form = useForm({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Form setup with default values
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      title_key: product?.title_key || '',
-      description_key: product?.description_key || '',
-      price_key: product?.price_key || '',
-      category: product?.category || '',
-      spice_level: product?.spice_level?.toString() || '0',
+      title_key: product?.title_key || "",
+      description_key: product?.description_key || "",
+      price_key: product?.price_key || "",
+      category: product?.category || "steaks",
+      meat_type: product?.meat_type || [],
+      spice_level: product?.spice_level || 0,
       is_popular: product?.is_popular || false,
+      image_src: product?.image_src || null,
     },
   });
-
-  // Initialize meat types from product if available
-  useEffect(() => {
-    if (product?.meat_type) {
-      setSelectedMeatTypes(Array.isArray(product.meat_type) ? product.meat_type : []);
-    }
-  }, [product]);
-
-  const handleMeatTypeChange = (type: string) => {
-    setSelectedMeatTypes(prev => {
-      if (prev.includes(type)) {
-        return prev.filter(item => item !== type);
-      } else {
-        return [...prev, type];
-      }
-    });
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const clearImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-  };
-
-  const onSubmit = async (data: any) => {
-    if (selectedMeatTypes.length === 0) {
+  
+  // Available categories
+  const categories = [
+    "steaks",
+    "burgers",
+    "specialties",
+    "poultry",
+    "platters",
+    "sides",
+  ];
+  
+  // Spice level options
+  const spiceLevels = [0, 1, 2, 3, 4, 5];
+  
+  // Submit handler
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!user) {
       toast({
         title: t('admin.error'),
-        description: t('admin.selectMeatType'),
+        description: t('admin.authRequired'),
         variant: 'destructive',
       });
       return;
     }
-
-    setIsLoading(true);
-    let imagePath = product?.image_src || null;
-
-    // Upload image if there's a new file
-    if (imageFile) {
-      try {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `${fileName}`;
-
-        // Direct upload to the existing products bucket - no bucket creation attempt
-        const { error: uploadError } = await supabase
-          .storage
-          .from('products')
-          .upload(filePath, imageFile, {
-            cacheControl: '3600',
-            upsert: true
-          });
-
-        if (uploadError) {
-          console.error('Upload error:', uploadError);
-          toast({
-            title: t('admin.error'),
-            description: 'Image upload failed: ' + uploadError.message,
-            variant: 'destructive',
-          });
-          setIsLoading(false);
-          return;
-        }
-
-        const { data: { publicUrl } } = supabase
-          .storage
-          .from('products')
-          .getPublicUrl(filePath);
-
-        imagePath = publicUrl;
-      } catch (error: any) {
-        console.error('Image upload error:', error);
-        toast({
-          title: t('admin.error'),
-          description: 'Image upload failed: ' + error.message,
-          variant: 'destructive',
-        });
-        setIsLoading(false);
-        return;
-      }
-    }
-
-    const productData = {
-      title_key: data.title_key,
-      description_key: data.description_key,
-      price_key: data.price_key,
-      category: data.category,
-      meat_type: selectedMeatTypes,
-      spice_level: parseInt(data.spice_level),
-      is_popular: data.is_popular,
-      image_src: imagePath,
-    };
-
+    
+    setIsSubmitting(true);
+    
     try {
-      if (product?.id) {
+      if (product) {
         // Update existing product
         const { error } = await supabase
           .from('products')
-          .update(productData)
+          .update({
+            title_key: values.title_key,
+            description_key: values.description_key,
+            price_key: values.price_key,
+            category: values.category,
+            meat_type: values.meat_type,
+            spice_level: values.spice_level,
+            is_popular: values.is_popular,
+            image_src: values.image_src,
+          })
           .eq('id', product.id);
-
+          
         if (error) throw error;
-
-        toast({
-          title: t('admin.success'),
-          description: t('admin.productUpdated'),
-        });
       } else {
         // Create new product
         const { error } = await supabase
           .from('products')
-          .insert(productData);
-
+          .insert({
+            title_key: values.title_key,
+            description_key: values.description_key,
+            price_key: values.price_key,
+            category: values.category,
+            meat_type: values.meat_type,
+            spice_level: values.spice_level,
+            is_popular: values.is_popular,
+            image_src: values.image_src,
+          });
+          
         if (error) throw error;
-
-        toast({
-          title: t('admin.success'),
-          description: t('admin.productCreated'),
-        });
       }
+      
+      toast({
+        title: product ? 'Product Updated' : 'Product Created',
+        description: product ? 'The product has been updated successfully.' : 'The product has been created successfully.',
+      });
       
       onSuccess();
     } catch (error: any) {
-      console.error('Product save error:', error);
       toast({
-        title: t('admin.error'),
+        title: 'Error',
         description: error.message,
         variant: 'destructive',
       });
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
-
-  const categories = [
-    'steaks', 
-    'burgers', 
-    'specialties', 
-    'poultry', 
-    'platters', 
-    'sides'
-  ];
-
-  const meatTypes = [
-    'beef',
-    'chicken',
-    'pork',
-    'lamb',
-    'vegetarian'
-  ];
-
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title_key"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('admin.titleKey')}</FormLabel>
+          <FormField
+            control={form.control}
+            name="title_key"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title Key</FormLabel>
+                <FormControl>
+                  <Input placeholder="menu.itemName.title" {...field} />
+                </FormControl>
+                <FormDescription>
+                  The translation key for the product title
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="price_key"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price Key</FormLabel>
+                <FormControl>
+                  <Input placeholder="menu.itemName.price" {...field} />
+                </FormControl>
+                <FormDescription>
+                  The translation key for the product price
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        
+        <FormField
+          control={form.control}
+          name="description_key"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description Key</FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="menu.itemName.description" 
+                  {...field} 
+                  rows={3}
+                />
+              </FormControl>
+              <FormDescription>
+                The translation key for the product description
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <Select 
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value}
+                >
                   <FormControl>
-                    <Input placeholder="menu.product.title" {...field} />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="description_key"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('admin.descriptionKey')}</FormLabel>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {t(`menu.category.${category}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="spice_level"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Spice Level (0-5)</FormLabel>
+                <Select 
+                  onValueChange={(value) => field.onChange(parseInt(value))} 
+                  defaultValue={String(field.value)}
+                >
                   <FormControl>
-                    <Textarea 
-                      placeholder="menu.product.description" 
-                      {...field} 
-                    />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select spice level" />
+                    </SelectTrigger>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="price_key"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('admin.priceKey')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="menu.product.price" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('admin.category')}</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('admin.selectCategory')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {t(`menu.category.${category}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="spice_level"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('admin.spiceLevel')}</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('admin.selectSpiceLevel')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="0">None</SelectItem>
-                      <SelectItem value="1">🔥</SelectItem>
-                      <SelectItem value="2">🔥🔥</SelectItem>
-                      <SelectItem value="3">🔥🔥🔥</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="is_popular"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>
-                      {t('admin.markAsPopular')}
-                    </FormLabel>
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <Label>{t('admin.meatTypes')}</Label>
-              <div className="grid grid-cols-2 gap-2 mt-2">
+                  <SelectContent>
+                    {spiceLevels.map((level) => (
+                      <SelectItem key={level} value={String(level)}>
+                        {level} {level > 0 ? '🌶️'.repeat(level) : 'Not Spicy'}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        
+        <FormField
+          control={form.control}
+          name="meat_type"
+          render={() => (
+            <FormItem>
+              <FormLabel>Meat Types</FormLabel>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {meatTypes.map((type) => (
-                  <div key={type} className="flex items-center space-x-2">
-                    <Checkbox 
-                      id={`meat-${type}`}
-                      checked={selectedMeatTypes.includes(type)}
-                      onCheckedChange={() => handleMeatTypeChange(type)}
-                    />
-                    <Label htmlFor={`meat-${type}`}>
-                      {t(`menu.meatType.${type}`)}
-                    </Label>
-                  </div>
+                  <FormField
+                    key={type.key}
+                    control={form.control}
+                    name="meat_type"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={type.key}
+                          className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(type.key)}
+                              onCheckedChange={(checked) => {
+                                const updatedValue = checked
+                                  ? [...field.value, type.key]
+                                  : field.value?.filter(
+                                      (value) => value !== type.key
+                                    );
+                                field.onChange(updatedValue);
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal cursor-pointer">
+                            {type[language] || type.en}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
                 ))}
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>{t('admin.productImage')}</Label>
-              <div className="border rounded-md p-4">
-                {imagePreview ? (
-                  <div className="relative">
-                    <img 
-                      src={imagePreview} 
-                      alt="Preview" 
-                      className="w-full h-40 object-cover rounded-md" 
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      className="absolute top-2 right-2 h-6 w-6 rounded-full bg-white"
-                      onClick={clearImage}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center h-40 bg-muted rounded-md">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="max-w-sm"
-                    />
-                  </div>
-                )}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="image_src"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image URL</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="/path/to/image.jpg" 
+                  {...field} 
+                  value={field.value || ''}
+                  onChange={(e) => {
+                    const value = e.target.value || null;
+                    field.onChange(value);
+                  }}
+                />
+              </FormControl>
+              <FormDescription>
+                URL to the product image (optional)
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="is_popular"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Popular Product</FormLabel>
+                <FormDescription>
+                  Mark this product as popular to highlight it
+                </FormDescription>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-end space-x-4 pt-4">
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        
+        <div className="flex justify-end gap-3">
           <Button 
             type="button" 
             variant="outline" 
             onClick={onCancel}
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
-            {t('admin.cancel')}
+            Cancel
           </Button>
           <Button 
             type="submit" 
-            disabled={isLoading}
+            disabled={isSubmitting}
             className="bg-brand-gold hover:bg-brand-gold/90"
           >
-            {isLoading 
-              ? t('admin.saving') 
-              : product 
-                ? t('admin.updateProduct') 
-                : t('admin.createProduct')
-            }
+            {isSubmitting ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            ) : (
+              <>{product ? 'Update Product' : 'Create Product'}</>
+            )}
           </Button>
         </div>
       </form>
