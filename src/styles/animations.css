@@ -1,0 +1,124 @@
+
+/* Commits Grid Animation Helpers */
+@keyframes highlight-animation {
+  0% { background-color: transparent; }
+  100% { background-color: var(--highlight, #48d55d); }
+}
+
+@keyframes flash-animation {
+  0% { background-color: var(--card-bg, white); }
+  50% { background-color: var(--highlight, #016d32); }
+  100% { background-color: var(--card-bg, white); }
+}
+
+.animate-highlight {
+  animation: highlight-animation 0.6s ease forwards;
+}
+
+.animate-flash {
+  animation: flash-animation 0.6s ease forwards;
+}
+
+/* Background balloon animation */
+@keyframes float-slow {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-10px) translateX(5px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* Enhanced balloon animations with more variety and increased visibility */
+.bg-brand-gold\/5, .bg-brand-blue\/5, 
+.bg-purple-500\/5, .bg-purple-600\/3, 
+.bg-purple-600\/4, .bg-brand-gold\/4, 
+.bg-brand-blue\/4, .bg-brand-gold\/3 {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.bg-brand-gold\/5:nth-child(odd) {
+  animation-delay: 1s;
+  animation-duration: 9s;
+}
+
+.bg-brand-blue\/5:nth-child(even) {
+  animation-delay: 2s;
+  animation-duration: 11s;
+}
+
+.bg-purple-500\/5 {
+  animation-delay: 0.5s;
+  animation-duration: 10s;
+}
+
+.bg-brand-gold\/4 {
+  animation-delay: 1.5s;
+  animation-duration: 12s;
+}
+
+.bg-brand-blue\/4 {
+  animation-delay: 3s;
+  animation-duration: 9.5s;
+}
+
+.bg-purple-600\/3, .bg-purple-600\/4 {
+  animation-delay: 2.5s;
+  animation-duration: 13s;
+}
+
+.bg-brand-gold\/3 {
+  animation-delay: 0.7s;
+  animation-duration: 10.5s;
+}
+
+/* Enhanced Mobile Menu Styling */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-gold {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(198, 146, 20, 0.4);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(198, 146, 20, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(198, 146, 20, 0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out forwards;
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 1.5s infinite;
+}

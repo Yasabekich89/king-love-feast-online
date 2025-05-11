@@ -1,0 +1,71 @@
+
+/* Instagram Feed Styling */
+.instagram-post-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.instagram-post-container:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.instagram-media {
+  transition: all 0.3s ease !important;
+}
+
+@media (max-width: 768px) {
+  .instagram-post-container {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Custom Instagram Placeholder */
+.instagram-placeholder {
+  aspect-ratio: 1 / 1;
+  background-color: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.instagram-placeholder .instagram-icon {
+  color: #C69214;
+  margin-bottom: 1rem;
+}
+
+/* Make Instagram embeds responsive */
+.instagram-media {
+  min-width: 100% !important;
+  width: 100% !important;
+  min-height: 500px;
+}
+
+@media (max-width: 640px) {
+  .instagram-media {
+    min-height: 400px;
+  }
+}
+
+/* Menu Cards & Menu-specific styling */
+.menu-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(198, 146, 20, 0.1);
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(198, 146, 20, 0.3);
+}
+
+.menu-item-image {
+  transition: transform 0.3s ease;
+}
+
+.menu-item:hover .menu-item-image {
+  transform: scale(1.05);
+}
