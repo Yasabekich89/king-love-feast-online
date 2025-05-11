@@ -95,32 +95,46 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
     }
     
     setIsSubmitting(true);
-    setIsUploading(uploadedImage !== null);
     
     try {
       // First upload image if there's a new one
       let imageSrc = values.image_src;
+      
       if (uploadedImage) {
+        setIsUploading(true);
+        console.log('Uploading image...');
         const uploadedUrl = await uploadImageToStorage(uploadedImage, user.id);
+        setIsUploading(false);
+        
         if (uploadedUrl) {
+          console.log('Image uploaded successfully:', uploadedUrl);
           imageSrc = uploadedUrl;
+        } else {
+          console.error('Failed to upload image');
+          toast({
+            title: t('admin.warning'),
+            description: t('admin.imageUploadFailed'),
+            variant: 'destructive',
+          });
         }
       }
+      
+      const productData = {
+        title_key: values.title_key,
+        description_key: values.description_key,
+        price_key: values.price_key,
+        category: values.category,
+        meat_type: values.meat_type,
+        spice_level: values.spice_level,
+        is_popular: values.is_popular,
+        image_src: imageSrc,
+      };
       
       if (product) {
         // Update existing product
         const { error } = await supabase
           .from('products')
-          .update({
-            title_key: values.title_key,
-            description_key: values.description_key,
-            price_key: values.price_key,
-            category: values.category,
-            meat_type: values.meat_type,
-            spice_level: values.spice_level,
-            is_popular: values.is_popular,
-            image_src: imageSrc,
-          })
+          .update(productData)
           .eq('id', product.id);
           
         if (error) throw error;
@@ -128,16 +142,7 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
         // Create new product
         const { error } = await supabase
           .from('products')
-          .insert({
-            title_key: values.title_key,
-            description_key: values.description_key,
-            price_key: values.price_key,
-            category: values.category,
-            meat_type: values.meat_type,
-            spice_level: values.spice_level,
-            is_popular: values.is_popular,
-            image_src: imageSrc,
-          });
+          .insert(productData);
           
         if (error) throw error;
       }
@@ -151,6 +156,7 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
       
       onSuccess();
     } catch (error: any) {
+      console.error('Error saving product:', error);
       toast({
         title: t('admin.error'),
         description: error.message,
