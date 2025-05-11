@@ -131,15 +131,6 @@ const Menu: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      {/* Hero Section */}
-      <div className="relative bg-brand-blue py-16">
-        <div className="crown-pattern absolute inset-0 opacity-10"></div>
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl font-serif text-brand-gold mb-4">{t('menu.title')}</h1>
-          <p className="text-white text-lg max-w-2xl mx-auto">{t('menu.subtitle')}</p>
-        </div>
-      </div>
-      
       <div className="container mx-auto px-4 py-12 flex-grow">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-serif text-brand-blue">{t('menu.discover')}</h2>
