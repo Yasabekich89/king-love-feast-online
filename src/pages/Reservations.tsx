@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ReservationForm from '@/components/ReservationForm';
+import { BackgroundBoxesDemo } from '@/components/ui/demo';
 import { Crown } from 'lucide-react';
 
 const Reservations: React.FC = () => {
@@ -12,6 +13,9 @@ const Reservations: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      
+      {/* Background Boxes Demo Section */}
+      <BackgroundBoxesDemo />
       
       {/* Hero Section */}
       <section className="relative py-16 bg-brand-blue">
