@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Instagram } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -33,11 +33,23 @@ const loadInstagramEmbedScript = () => {
 const InstagramFeed: React.FC = () => {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
+  const [loaded, setLoaded] = useState(false);
 
+  // Process Instagram embeds after component renders and again when isMobile changes
   useEffect(() => {
     // Load Instagram embed script when component mounts
     loadInstagramEmbedScript();
-  }, []);
+    
+    // Set a small timeout to ensure posts are processed after rendering
+    const timer = setTimeout(() => {
+      if (window.instgrm) {
+        window.instgrm.Embeds.process();
+      }
+      setLoaded(true);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [isMobile]);
 
   // Instagram post data
   const instagramPosts = [
@@ -55,6 +67,13 @@ const InstagramFeed: React.FC = () => {
     }
   ];
 
+  // Force re-process embeds when needed
+  const handleCarouselChange = () => {
+    if (window.instgrm) {
+      window.instgrm.Embeds.process();
+    }
+  };
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -66,17 +85,22 @@ const InstagramFeed: React.FC = () => {
         
         {isMobile ? (
           <div className="relative">
-            <Carousel className="w-full">
+            <Carousel className="w-full" onScrollEnd={handleCarouselChange}>
               <CarouselContent>
                 {instagramPosts.map((post) => (
-                  <CarouselItem key={post.id}>
-                    <div className="px-2">
+                  <CarouselItem key={post.id} className="min-h-[400px]">
+                    <div className="px-2 h-full">
                       <div className="instagram-post-container transform transition-all duration-300 hover:translate-y-[-5px] h-full">
                         <blockquote 
                           className="instagram-media rounded-lg overflow-hidden shadow-lg border-2 border-brand-gold" 
                           data-instgrm-permalink={post.permalink}
                           data-instgrm-version="14"
-                          style={{ background: '#FFF', maxWidth: '100%', width: '100%' }}
+                          style={{ 
+                            background: '#FFF', 
+                            maxWidth: '100%', 
+                            width: '100%',
+                            minHeight: '380px'
+                          }}
                         ></blockquote>
                       </div>
                     </div>
