@@ -1,4 +1,5 @@
 
+
 /* 
   Responsive fixes for mobile layout issues 
   These styles are targeted to fix specific components
@@ -44,7 +45,7 @@
 /* Fix menu cards for mobile */
 .menu-card-container {
   width: 100%;
-  overflow-hidden;
+  overflow: hidden;
 }
 
 /* Image container constraints */
@@ -63,3 +64,4 @@
     min-height: 380px !important;
   }
 }
+
