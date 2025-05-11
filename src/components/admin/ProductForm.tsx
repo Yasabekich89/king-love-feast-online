@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/language';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -30,6 +31,7 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
+import { Upload, X, Image as ImageIcon } from 'lucide-react';
 
 type Product = Tables<'products'>;
 type Props = {
@@ -59,11 +61,17 @@ const formSchema = z.object({
   image_src: z.string().nullable(),
 });
 
+const STORAGE_BUCKET = 'products';
+
 const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
   const { t, meatTypes, language } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(product?.image_src || null);
+  const [isUploading, setIsUploading] = useState(false);
   
   // Form setup with default values
   const form = useForm<z.infer<typeof formSchema>>({
@@ -92,6 +100,97 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
   
   // Spice level options
   const spiceLevels = [0, 1, 2, 3, 4, 5];
+
+  // Handle file upload
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: t('admin.error'),
+        description: t('admin.onlyImagesAllowed'),
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    // Check file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        title: t('admin.error'),
+        description: t('admin.fileTooLarge'),
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    setUploadedImage(file);
+    
+    // Create local preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Upload image to Supabase Storage
+  const uploadImageToStorage = async (file: File): Promise<string | null> => {
+    if (!user) return null;
+    
+    setIsUploading(true);
+    try {
+      // First, check if storage bucket exists, if not create it
+      const { data: buckets } = await supabase.storage.listBuckets();
+      const bucketExists = buckets?.some(bucket => bucket.name === STORAGE_BUCKET);
+      
+      if (!bucketExists) {
+        const { error: createError } = await supabase.storage.createBucket(
+          STORAGE_BUCKET, 
+          { public: true }
+        );
+        if (createError) throw createError;
+      }
+      
+      // Generate a unique filename with timestamp
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+      const filePath = `${fileName}`;
+      
+      // Upload file
+      const { error: uploadError } = await supabase.storage
+        .from(STORAGE_BUCKET)
+        .upload(filePath, file);
+        
+      if (uploadError) throw uploadError;
+      
+      // Get public URL
+      const { data } = supabase.storage
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(filePath);
+        
+      return data.publicUrl;
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: t('admin.error'),
+        description: error.message,
+        variant: 'destructive',
+      });
+      return null;
+    } finally {
+      setIsUploading(false);
+    }
+  };
+  
+  // Remove image
+  const handleRemoveImage = () => {
+    setUploadedImage(null);
+    setPreviewUrl(null);
+    form.setValue('image_src', null);
+  };
   
   // Submit handler
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -107,6 +206,15 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
     setIsSubmitting(true);
     
     try {
+      // First upload image if there's a new one
+      let imageSrc = values.image_src;
+      if (uploadedImage) {
+        const uploadedUrl = await uploadImageToStorage(uploadedImage);
+        if (uploadedUrl) {
+          imageSrc = uploadedUrl;
+        }
+      }
+      
       if (product) {
         // Update existing product
         const { error } = await supabase
@@ -119,7 +227,7 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
             meat_type: values.meat_type,
             spice_level: values.spice_level,
             is_popular: values.is_popular,
-            image_src: values.image_src,
+            image_src: imageSrc,
           })
           .eq('id', product.id);
           
@@ -136,21 +244,23 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
             meat_type: values.meat_type,
             spice_level: values.spice_level,
             is_popular: values.is_popular,
-            image_src: values.image_src,
+            image_src: imageSrc,
           });
           
         if (error) throw error;
       }
       
       toast({
-        title: product ? 'Product Updated' : 'Product Created',
-        description: product ? 'The product has been updated successfully.' : 'The product has been created successfully.',
+        title: product ? t('admin.productUpdated') : t('admin.productCreated'),
+        description: product 
+          ? t('admin.productUpdatedDesc') 
+          : t('admin.productCreatedDesc'),
       });
       
       onSuccess();
     } catch (error: any) {
       toast({
-        title: 'Error',
+        title: t('admin.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -162,6 +272,51 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Image upload section */}
+        <div className="space-y-2">
+          <FormLabel>Product Image</FormLabel>
+          <div className="grid grid-cols-1 gap-4">
+            {previewUrl ? (
+              <div className="relative rounded-md overflow-hidden border border-gray-200">
+                <img 
+                  src={previewUrl} 
+                  alt="Product preview" 
+                  className="w-full h-60 object-cover"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-2 right-2 rounded-full opacity-80 hover:opacity-100"
+                  onClick={handleRemoveImage}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div 
+                className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors cursor-pointer"
+                onClick={() => document.getElementById('image-upload')?.click()}
+              >
+                <ImageIcon className="mb-2 h-10 w-10" />
+                <p className="mb-1">{t('admin.clickToUpload')}</p>
+                <p className="text-xs">{t('admin.maxFileSize')}</p>
+                
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </div>
+            )}
+          </div>
+          <FormDescription>
+            Upload a product image (optional)
+          </FormDescription>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
@@ -235,7 +390,7 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent position={isMobile ? "popper" : "item-aligned"}>
                     {categories.map((category) => (
                       <SelectItem key={category} value={category}>
                         {t(`menu.category.${category}`)}
@@ -263,7 +418,7 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
                       <SelectValue placeholder="Select spice level" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent position={isMobile ? "popper" : "item-aligned"}>
                     {spiceLevels.map((level) => (
                       <SelectItem key={level} value={String(level)}>
                         {level} {level > 0 ? '🌶️'.repeat(level) : 'Not Spicy'}
@@ -283,7 +438,7 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
           render={() => (
             <FormItem>
               <FormLabel>Meat Types</FormLabel>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                 {meatTypes.map((type) => (
                   <FormField
                     key={type.key}
@@ -324,31 +479,6 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
         
         <FormField
           control={form.control}
-          name="image_src"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="/path/to/image.jpg" 
-                  {...field} 
-                  value={field.value || ''}
-                  onChange={(e) => {
-                    const value = e.target.value || null;
-                    field.onChange(value);
-                  }}
-                />
-              </FormControl>
-              <FormDescription>
-                URL to the product image (optional)
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
           name="is_popular"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
@@ -373,19 +503,19 @@ const ProductForm: React.FC<Props> = ({ product, onSuccess, onCancel }) => {
             type="button" 
             variant="outline" 
             onClick={onCancel}
-            disabled={isSubmitting}
+            disabled={isSubmitting || isUploading}
           >
-            Cancel
+            {t('admin.cancel')}
           </Button>
           <Button 
             type="submit" 
-            disabled={isSubmitting}
+            disabled={isSubmitting || isUploading}
             className="bg-brand-gold hover:bg-brand-gold/90"
           >
-            {isSubmitting ? (
+            {isSubmitting || isUploading ? (
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
             ) : (
-              <>{product ? 'Update Product' : 'Create Product'}</>
+              <>{product ? t('admin.updateProduct') : t('admin.createProduct')}</>
             )}
           </Button>
         </div>
