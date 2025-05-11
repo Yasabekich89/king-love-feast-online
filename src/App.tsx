@@ -28,7 +28,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <NavBarDemo />
-            <div className="pt-20 sm:pt-24"> {/* Add padding to account for the fixed navbar */}
+            <div className="pt-16 sm:pt-20"> {/* Adjusted padding to account for the fixed navbar */}
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/reservations" element={<Reservations />} />

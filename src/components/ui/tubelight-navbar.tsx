@@ -39,14 +39,10 @@ export function NavBar({ items, className, children }: NavBarProps) {
   }, [])
 
   return (
-    <div
-      className={cn(
-        "fixed top-0 left-1/2 -translate-x-1/2 z-50 pt-4 sm:pt-6 w-full max-w-4xl px-4",
-        className,
-      )}
-    >
+    <div className={cn("w-full", className)}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 bg-white/70 dark:bg-background/70 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
+        {children}
+        <div className="flex items-center gap-2">
           {items.map((item) => {
             const Icon = item.icon
             const isActive = activeTab === item.name
@@ -56,9 +52,9 @@ export function NavBar({ items, className, children }: NavBarProps) {
                 key={item.name}
                 to={item.url}
                 className={cn(
-                  "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
+                  "relative cursor-pointer text-sm font-semibold px-4 sm:px-6 py-2 rounded-full transition-colors",
                   "text-foreground/80 hover:text-brand-gold",
-                  isActive && "bg-muted text-brand-gold",
+                  isActive && "text-brand-gold",
                 )}
               >
                 <span className="hidden md:inline">{item.name}</span>
@@ -87,7 +83,6 @@ export function NavBar({ items, className, children }: NavBarProps) {
             )
           })}
         </div>
-        {children && <div className="ml-4">{children}</div>}
       </div>
     </div>
   )
