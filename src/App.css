@@ -1,3 +1,4 @@
+
 #root {
   max-width: 100%;
   margin: 0;
@@ -165,4 +166,136 @@
 .bg-brand-gold\/3 {
   animation-delay: 0.7s;
   animation-duration: 10.5s;
+}
+
+/* Enhanced Mobile Menu Styling */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-gold {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(198, 146, 20, 0.4);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(198, 146, 20, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(198, 146, 20, 0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out forwards;
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 1.5s infinite;
+}
+
+/* Fancy Menu Item Styling */
+.menu-item-fancy {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-left: 3px solid transparent;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.menu-item-fancy:hover, .menu-item-fancy:focus {
+  background-color: rgba(255, 255, 255, 1);
+  border-left: 3px solid #C69214;
+  transform: translateX(5px);
+  box-shadow: 0 4px 10px rgba(198, 146, 20, 0.1);
+}
+
+.menu-emoji {
+  display: inline-block;
+  font-size: 1.5rem;
+  margin-right: 12px;
+  transition: transform 0.3s ease;
+}
+
+.menu-item-fancy:hover .menu-emoji {
+  transform: scale(1.2);
+}
+
+.menu-text {
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Language Button Styling */
+.language-button-fancy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+
+.language-button-fancy:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+.language-button-fancy.active {
+  background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(240,240,240,0.5));
+  border: 1px solid rgba(198, 146, 20, 0.3);
+  box-shadow: 0 4px 15px rgba(198, 146, 20, 0.1);
+}
+
+.language-button-fancy.active:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #C69214, transparent);
+}
+
+.language-name {
+  font-size: 0.75rem;
+  margin-top: 6px;
+  color: #666;
+  font-weight: 500;
+}
+
+.language-button-fancy.active .language-name {
+  color: #C69214;
 }

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,22 @@ const Header: React.FC = () => {
   const { language, setLanguage, t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const [pulseMenu, setPulseMenu] = useState(false);
+
+  // Add pulsing effect to menu button to draw attention
+  useEffect(() => {
+    const pulseTiming = setTimeout(() => {
+      setPulseMenu(true);
+      
+      const stopPulseTiming = setTimeout(() => {
+        setPulseMenu(false);
+      }, 2000);
+      
+      return () => clearTimeout(stopPulseTiming);
+    }, 3000);
+    
+    return () => clearTimeout(pulseTiming);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -32,7 +48,7 @@ const Header: React.FC = () => {
           />
         </Link>
 
-        {/* Desktop Navigation - Home button removed */}
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link to="/menu" className="font-medium text-brand-blue hover:text-brand-gold transition-colors">
             {t('nav.menu')}
@@ -74,71 +90,95 @@ const Header: React.FC = () => {
             </DropdownMenu>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button with pulse animation */}
           <button 
-            className="md:hidden text-brand-blue hover:text-brand-gold"
+            className={`md:hidden text-brand-blue hover:text-brand-gold relative ${pulseMenu ? 'animate-pulse-gold' : ''}`}
             onClick={toggleMenu}
             aria-label="Toggle menu"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-brand-gold rounded-full hidden"></span>
           </button>
         </div>
       </div>
 
-      {/* Mobile menu - Home button removed */}
+      {/* Enhanced Mobile Menu with Emojis and Animations */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg py-4 z-50">
-          <div className="container mx-auto px-4 flex flex-col space-y-4">
-            <Link 
-              to="/menu" 
-              className="font-medium text-brand-blue hover:text-brand-gold transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {t('nav.menu')}
-            </Link>
-            <Link 
-              to="/reservations" 
-              className="font-medium text-brand-blue hover:text-brand-gold transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {t('nav.reservations')}
-            </Link>
-            <Link 
-              to="/about" 
-              className="font-medium text-brand-blue hover:text-brand-gold transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {t('nav.about')}
-            </Link>
-            <Link 
-              to="/contact" 
-              className="font-medium text-brand-blue hover:text-brand-gold transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {t('nav.contact')}
-            </Link>
-            
-            {/* Mobile language switcher - Centered flags */}
-            <div className="flex flex-col border-t border-gray-200 pt-4 mt-2">
-              <div className="flex justify-center space-x-6">
-                <button 
-                  className={`flex items-center justify-center ${language === 'en' ? 'ring-2 ring-brand-gold' : ''}`}
-                  onClick={() => setLanguage('en')}
+        <div className="md:hidden fixed inset-0 top-[72px] bg-black/50 z-40 animate-fade-in">
+          <div className="h-full w-4/5 max-w-xs bg-gradient-to-br from-white to-gray-50 shadow-lg transform translate-x-0 animate-slide-in-right">
+            <div className="py-4 px-6 flex flex-col h-full">
+              {/* Royal crown decoration */}
+              <div className="absolute top-4 right-4 opacity-10">
+                <Crown size={80} className="text-brand-gold" />
+              </div>
+              
+              {/* Menu items with emojis */}
+              <div className="flex flex-col space-y-1 mt-3">
+                <Link 
+                  to="/menu" 
+                  className="menu-item-fancy"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <FlagUS className="w-8 h-8" />
-                </button>
-                <button 
-                  className={`flex items-center justify-center ${language === 'am' ? 'ring-2 ring-brand-gold' : ''}`}
-                  onClick={() => setLanguage('am')}
+                  <span className="menu-emoji">🍖</span>
+                  <span className="menu-text">{t('nav.menu')}</span>
+                </Link>
+                <Link 
+                  to="/reservations" 
+                  className="menu-item-fancy"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <FlagAM className="w-8 h-8" />
-                </button>
-                <button 
-                  className={`flex items-center justify-center ${language === 'ru' ? 'ring-2 ring-brand-gold' : ''}`}
-                  onClick={() => setLanguage('ru')}
+                  <span className="menu-emoji">📅</span>
+                  <span className="menu-text">{t('nav.reservations')}</span>
+                </Link>
+                <Link 
+                  to="/about" 
+                  className="menu-item-fancy"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <FlagRU className="w-8 h-8" />
-                </button>
+                  <span className="menu-emoji">👑</span>
+                  <span className="menu-text">{t('nav.about')}</span>
+                </Link>
+                <Link 
+                  to="/contact" 
+                  className="menu-item-fancy"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className="menu-emoji">📞</span>
+                  <span className="menu-text">{t('nav.contact')}</span>
+                </Link>
+              </div>
+              
+              {/* Decorative separator */}
+              <div className="my-4 border-t border-gray-200 relative">
+                <div className="absolute left-1/2 top-0 -mt-2 -ml-2 w-4 h-4 rounded-full bg-brand-gold opacity-20"></div>
+              </div>
+              
+              {/* Enhanced Mobile language switcher */}
+              <div className="mt-auto mb-8">
+                <h3 className="text-sm font-medium text-gray-500 mb-3">{t('nav.selectLanguage')} 🌐</h3>
+                <div className="flex justify-between space-x-2">
+                  <button 
+                    className={`language-button-fancy ${language === 'en' ? 'active' : ''}`}
+                    onClick={() => setLanguage('en')}
+                  >
+                    <FlagUS className="w-8 h-8" />
+                    <span className="language-name">English</span>
+                  </button>
+                  <button 
+                    className={`language-button-fancy ${language === 'am' ? 'active' : ''}`}
+                    onClick={() => setLanguage('am')}
+                  >
+                    <FlagAM className="w-8 h-8" />
+                    <span className="language-name">Հայերեն</span>
+                  </button>
+                  <button 
+                    className={`language-button-fancy ${language === 'ru' ? 'active' : ''}`}
+                    onClick={() => setLanguage('ru')}
+                  >
+                    <FlagRU className="w-8 h-8" />
+                    <span className="language-name">Русский</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
