@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Crown, Menu, X } from 'lucide-react';
@@ -15,6 +15,7 @@ import { FlagUS, FlagRU, FlagAM } from './Flags';
 const Header: React.FC = () => {
   const { language, setLanguage, t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -31,11 +32,8 @@ const Header: React.FC = () => {
           />
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation - Home button removed */}
         <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/" className="font-medium text-brand-blue hover:text-brand-gold transition-colors">
-            {t('nav.home')}
-          </Link>
           <Link to="/menu" className="font-medium text-brand-blue hover:text-brand-gold transition-colors">
             {t('nav.menu')}
           </Link>
@@ -87,17 +85,10 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu - Home button removed */}
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg py-4 z-50">
           <div className="container mx-auto px-4 flex flex-col space-y-4">
-            <Link 
-              to="/" 
-              className="font-medium text-brand-blue hover:text-brand-gold transition-colors py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {t('nav.home')}
-            </Link>
             <Link 
               to="/menu" 
               className="font-medium text-brand-blue hover:text-brand-gold transition-colors py-2"

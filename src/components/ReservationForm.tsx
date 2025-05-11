@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -144,7 +143,8 @@ const ReservationForm: React.FC = () => {
               />
             </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Date and Time Fields - Keeping them in the same row on all screen sizes */}
+            <div className="grid grid-cols-2 gap-4">
               {/* Date Field */}
               <motion.div variants={itemVariants}>
                 <FormField
