@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Instagram, MapPin, Clock, Phone, Facebook } from 'lucide-react';
@@ -31,11 +30,6 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <img 
-              src="/lovable-uploads/310ac2a1-3c6b-4705-bf17-e72727b92a23.png" 
-              alt="Kings Love Meat" 
-              className="h-20 mb-4"
-            />
             <p className="text-gray-300 max-w-xs">
               Premium meat restaurant serving royal flavors and exceptional dining experiences.
             </p>

@@ -1,4 +1,3 @@
-
 "use client" 
 
 import * as React from "react"
@@ -100,12 +99,10 @@ export const CommitsGrid = ({ text }: { text: string }) => {
               shouldFlash ? "animate-flash" : "",
               !isHighlighted && !shouldFlash ? "bg-card" : ""
             )}
-            style={
-              {
-                animationDelay: getRandomDelay(),
-                "--highlight": color,
-              } as CSSProperties
-            }
+            style={{
+              animationDelay: getRandomDelay(),
+              "--highlight": color,
+            } as CSSProperties}
           />
         );
       })}
