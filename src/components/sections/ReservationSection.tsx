@@ -10,9 +10,9 @@ const ReservationSection: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="py-20 bg-gray-100 crown-pattern relative overflow-hidden z-10">
+    <section className="py-20 bg-gray-100 crown-pattern relative overflow-visible">
       {/* Decorative background elements with significantly more balloons and extended bottom space */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+      <div className="absolute top-0 left-0 w-full h-full overflow-visible z-0">
         {/* Original balloons */}
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl"></div>
         <div className="absolute top-1/2 -right-32 w-80 h-80 bg-brand-blue/5 rounded-full blur-3xl"></div>

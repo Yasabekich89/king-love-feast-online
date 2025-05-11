@@ -13,16 +13,16 @@ const Reservations: React.FC = () => {
   const { t } = useLanguage();
   
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden">
+    <div className="min-h-screen flex flex-col">
       <Header />
       
       {/* Background Boxes Demo Section with Reservation Title */}
       <BackgroundBoxesDemo />
       
       {/* Reservation Form Section */}
-      <section className="py-16 bg-gray-100 flex-grow relative overflow-hidden">
+      <section className="py-16 bg-gray-100 flex-grow relative overflow-visible">
         {/* Decorative background elements - Extended positioning and sizing with more balloons */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+        <div className="absolute top-0 left-0 w-full h-full overflow-visible z-0">
           {/* Original balloons - enhanced */}
           <div className="absolute -top-20 -left-20 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl"></div>
           <div className="absolute top-1/2 -right-32 w-80 h-80 bg-brand-blue/5 rounded-full blur-3xl"></div>
