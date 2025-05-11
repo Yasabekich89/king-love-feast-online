@@ -21,12 +21,21 @@ const Reservations: React.FC = () => {
       
       {/* Reservation Form Section */}
       <section className="py-16 bg-gray-100 flex-grow relative overflow-visible">
-        {/* Decorative background elements - Extended positioning and sizing */}
+        {/* Decorative background elements - Extended positioning and sizing with more balloons */}
         <div className="absolute top-0 left-0 w-full h-full overflow-visible z-0">
+          {/* Original balloons - enhanced */}
           <div className="absolute -top-20 -left-20 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl"></div>
           <div className="absolute top-1/2 -right-32 w-80 h-80 bg-brand-blue/5 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-brand-gold/5 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-24 right-1/4 w-72 h-72 bg-brand-blue/5 rounded-full blur-3xl"></div>
+          
+          {/* Additional balloons with variety of colors, sizes and positions */}
+          <div className="absolute top-1/3 left-20 w-52 h-52 bg-purple-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-3/4 left-1/4 w-70 h-70 bg-brand-gold/4 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-36 right-20 w-64 h-64 bg-brand-blue/4 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-52 left-1/5 w-88 h-88 bg-purple-600/3 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 left-2/3 w-60 h-60 bg-brand-gold/3 rounded-full blur-3xl"></div>
+          <div className="absolute -top-16 right-1/5 w-48 h-48 bg-brand-blue/4 rounded-full blur-3xl"></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
@@ -80,7 +89,7 @@ const Reservations: React.FC = () => {
         </div>
         
         {/* Add additional padding at the bottom to ensure all animations are visible */}
-        <div className="h-32"></div>
+        <div className="h-40"></div>
       </section>
       
       <Footer />

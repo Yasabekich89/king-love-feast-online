@@ -1,3 +1,4 @@
+
 #root {
   max-width: 100%;
   margin: 0;
@@ -124,7 +125,11 @@
   }
 }
 
-.bg-brand-gold\/5, .bg-brand-blue\/5 {
+/* Enhanced balloon animations with more variety */
+.bg-brand-gold\/5, .bg-brand-blue\/5, 
+.bg-purple-500\/5, .bg-purple-600\/3, 
+.bg-purple-600\/4, .bg-brand-gold\/4, 
+.bg-brand-blue\/4, .bg-brand-gold\/3 {
   animation: float-slow 8s ease-in-out infinite;
 }
 
@@ -136,4 +141,29 @@
 .bg-brand-blue\/5:nth-child(even) {
   animation-delay: 2s;
   animation-duration: 11s;
+}
+
+.bg-purple-500\/5 {
+  animation-delay: 0.5s;
+  animation-duration: 10s;
+}
+
+.bg-brand-gold\/4 {
+  animation-delay: 1.5s;
+  animation-duration: 12s;
+}
+
+.bg-brand-blue\/4 {
+  animation-delay: 3s;
+  animation-duration: 9.5s;
+}
+
+.bg-purple-600\/3, .bg-purple-600\/4 {
+  animation-delay: 2.5s;
+  animation-duration: 13s;
+}
+
+.bg-brand-gold\/3 {
+  animation-delay: 0.7s;
+  animation-duration: 10.5s;
 }
