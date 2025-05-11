@@ -7,6 +7,7 @@ import { motion, useScroll, useSpring } from 'framer-motion';
 import PerformanceMonitor from '@/components/PerformanceMonitor';
 
 // Lazy load non-critical components
+const InstagramFeed = lazy(() => import('@/components/InstagramFeed'));
 const FeaturedMenuSection = lazy(() => import('@/components/sections/FeaturedMenuSection'));
 const ReservationSection = lazy(() => import('@/components/sections/ReservationSection'));
 
@@ -19,7 +20,7 @@ const Index: React.FC = () => {
   });
   
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col relative">
       <PerformanceMonitor />
       
       {/* Scroll progress indicator */}
@@ -38,6 +39,12 @@ const Index: React.FC = () => {
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
       </div>}>
         <FeaturedMenuSection />
+      </Suspense>
+      
+      <Suspense fallback={<div className="py-16 flex justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-gold"></div>
+      </div>}>
+        <InstagramFeed />
       </Suspense>
       
       <Suspense fallback={<div className="py-16 flex justify-center">
