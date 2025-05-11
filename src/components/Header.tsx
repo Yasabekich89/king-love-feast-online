@@ -51,16 +51,13 @@ const Header: React.FC = () => {
         </nav>
 
         <div className="flex items-center space-x-4">
-          {/* Language switcher dropdown */}
+          {/* Language switcher dropdown - Updated to show only flags */}
           <div className="hidden md:block border-l border-gray-200 pl-4">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center">
-                {language === 'en' && <FlagUS className="w-5 h-5 mr-2" />}
-                {language === 'am' && <FlagAM className="w-5 h-5 mr-2" />}
-                {language === 'ru' && <FlagRU className="w-5 h-5 mr-2" />}
-                <span className="text-sm font-medium">
-                  {language === 'en' ? 'EN' : language === 'am' ? 'AM' : 'RU'}
-                </span>
+                {language === 'en' && <FlagUS className="w-6 h-6" />}
+                {language === 'am' && <FlagAM className="w-6 h-6" />}
+                {language === 'ru' && <FlagRU className="w-6 h-6" />}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setLanguage('en')} className="flex items-center">
@@ -130,30 +127,29 @@ const Header: React.FC = () => {
               {t('nav.contact')}
             </Link>
             
-            {/* Mobile language switcher */}
+            {/* Mobile language switcher - Updated for better presentation */}
             <div className="flex flex-col border-t border-gray-200 pt-4 mt-2 space-y-2">
-              <div className="font-medium text-gray-500 pb-2">Language / Язык / Լեզու</div>
-              <button 
-                className={`flex items-center text-sm ${language === 'en' ? 'text-brand-gold' : 'text-gray-500'}`}
-                onClick={() => setLanguage('en')}
-              >
-                <FlagUS className="w-5 h-5 mr-2" />
-                English
-              </button>
-              <button 
-                className={`flex items-center text-sm ${language === 'am' ? 'text-brand-gold' : 'text-gray-500'}`}
-                onClick={() => setLanguage('am')}
-              >
-                <FlagAM className="w-5 h-5 mr-2" />
-                Հայերեն
-              </button>
-              <button 
-                className={`flex items-center text-sm ${language === 'ru' ? 'text-brand-gold' : 'text-gray-500'}`}
-                onClick={() => setLanguage('ru')}
-              >
-                <FlagRU className="w-5 h-5 mr-2" />
-                Русский
-              </button>
+              <div className="font-medium text-gray-500 pb-2">{t('nav.language')}</div>
+              <div className="flex space-x-4">
+                <button 
+                  className={`flex items-center justify-center ${language === 'en' ? 'ring-2 ring-brand-gold' : ''}`}
+                  onClick={() => setLanguage('en')}
+                >
+                  <FlagUS className="w-8 h-8" />
+                </button>
+                <button 
+                  className={`flex items-center justify-center ${language === 'am' ? 'ring-2 ring-brand-gold' : ''}`}
+                  onClick={() => setLanguage('am')}
+                >
+                  <FlagAM className="w-8 h-8" />
+                </button>
+                <button 
+                  className={`flex items-center justify-center ${language === 'ru' ? 'ring-2 ring-brand-gold' : ''}`}
+                  onClick={() => setLanguage('ru')}
+                >
+                  <FlagRU className="w-8 h-8" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
