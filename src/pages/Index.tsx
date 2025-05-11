@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Header from '@/components/Header';
@@ -13,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import MenuCard from '@/components/MenuCard';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { BackgroundBoxesDemo } from '@/components/ui/demo';
+import { Gravity, MatterBody } from '@/components/ui/gravity';
 import { 
   Carousel, 
   CarouselContent, 
