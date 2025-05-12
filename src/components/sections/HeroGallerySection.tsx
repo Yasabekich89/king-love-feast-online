@@ -81,7 +81,7 @@ const HeroGallerySection: React.FC = () => {
     }
   };
   return <ContainerScroll className="h-[350vh]">
-      <BentoGrid className="sticky left-0 top-0 z-0 h-screen w-full p-4 bg-slate-900/50">
+      <BentoGrid className="sticky left-0 top-0 z-0 h-screen w-full p-4 bg-state-950/50">
         {productImages.length > 0 ?
       // Display fetched product images
       productImages.map((imageUrl, index) => <BentoCell key={index} className="overflow-hidden rounded-xl shadow-xl border border-brand-gold/20">

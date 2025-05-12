@@ -67,6 +67,9 @@ export default {
 					blue: '#0A3D4F',
 					gold: '#C69214',
 					black: '#111111',
+				},
+				state: {
+					'950': '#171717', // New dark charcoal color for state-950
 				}
 			},
 			borderRadius: {
@@ -118,3 +121,4 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
