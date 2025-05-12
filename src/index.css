@@ -91,9 +91,16 @@
     @apply border-border;
   }
 
+  html, body {
+    @apply overflow-x-hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     @apply bg-background text-foreground font-sans pt-16 md:pt-24;
     overflow-x: hidden;
+    min-height: 100%;
+    touch-action: manipulation;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -103,6 +110,12 @@
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Mobile tap target size improvement */
+  button, a, [role="button"] {
+    @apply min-h-[44px] min-w-[44px];
+    touch-action: manipulation;
   }
 }
 
@@ -321,4 +334,71 @@
 
 .animate-flash {
   animation: flash-animation 0.6s ease forwards;
+}
+
+/* Mobile-specific enhancements */
+@media (max-width: 768px) {
+  .menu-item-fancy {
+    @apply py-4 px-3 text-lg flex items-center transition-all duration-300 rounded-lg border-l-4 border-transparent hover:border-brand-gold hover:bg-gray-100;
+  }
+  
+  .menu-emoji {
+    @apply mr-3 text-xl;
+  }
+  
+  .menu-text {
+    @apply font-medium;
+  }
+  
+  .language-button-fancy {
+    @apply flex flex-col items-center justify-center p-3 rounded-lg shadow-sm transition-all duration-300 flex-1 relative;
+  }
+  
+  .language-button-fancy.active {
+    @apply bg-brand-gold/10 shadow-md;
+  }
+  
+  .language-button-fancy.active::after {
+    content: '';
+    @apply absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-brand-gold rounded-full;
+  }
+  
+  .language-name {
+    @apply text-xs mt-1 text-gray-600;
+  }
+}
+
+/* Response touch feedback */
+@media (hover: none) {
+  .royal-btn:active {
+    transform: scale(0.97);
+  }
+  
+  .menu-item-fancy:active {
+    @apply bg-gray-100;
+  }
+}
+
+/* Improved performance for mobile animations */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Fix for mobile notches and home indicators */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 20px);
+}
+
+/* Improved mobile scrolling */
+.smooth-scroll-container {
+  -webkit-overflow-scrolling: touch;
 }

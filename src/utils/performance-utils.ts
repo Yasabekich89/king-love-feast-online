@@ -23,7 +23,12 @@ export const hasPerformanceLimitations = (): boolean => {
     'connection' in navigator && 
     (navigator as any).connection?.saveData === true;
   
-  return isMobile || prefersReducedMotion || hasLimitedCPU || isDataSaverOn;
+  // Check for battery saving mode if available
+  const isBatterySaving = 'getBattery' in navigator && 
+    (navigator as any).getBattery && 
+    (navigator as any).getBattery().then((battery: any) => battery.charging === false && battery.level <= 0.2);
+  
+  return isMobile || prefersReducedMotion || hasLimitedCPU || isDataSaverOn || isBatterySaving;
 };
 
 /**
@@ -56,11 +61,19 @@ export const getOptimalImageWidth = (containerWidth?: number): number => {
   // Get device pixel ratio (default to 1 if not available)
   const pixelRatio = window.devicePixelRatio || 1;
   
-  // Use container width or viewport width
-  const width = containerWidth || window.innerWidth;
+  // Use container width, viewport width, or a sensible default
+  const width = containerWidth || window.innerWidth || 640;
   
   // Calculate optimal width based on container/viewport and pixel ratio
   let optimalWidth = Math.round(width * pixelRatio);
+  
+  // Check if device is low-end
+  const isLowEnd = hasPerformanceLimitations();
+  
+  // For lower-end devices, consider scaling down images to reduce memory usage
+  if (isLowEnd) {
+    optimalWidth = Math.min(optimalWidth, 1280); // Cap for low-end devices
+  }
   
   // Cap at reasonable sizes to prevent unnecessarily large images
   const breakpoints = [320, 640, 768, 1024, 1280, 1536, 2048, 3840];
@@ -83,7 +96,7 @@ export const getOptimalImageWidth = (containerWidth?: number): number => {
  * @returns Optimized image URL
  */
 export const getOptimizedImageUrl = (url: string, width?: number): string => {
-  // Skip optimization for data URLs or relative URLs
+  // Skip optimization for data URLs, null or relative URLs
   if (!url || url.startsWith('data:') || url.startsWith('/')) {
     return url;
   }
@@ -103,12 +116,44 @@ export const getOptimizedImageUrl = (url: string, width?: number): string => {
         searchParams.set('w', optimalWidth.toString());
       }
       
-      // Add quality parameter if not already present
+      // Add quality parameter if not already present - use lower quality for mobile
       if (!searchParams.has('q')) {
-        searchParams.set('q', '80');
+        const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+        searchParams.set('q', isMobile ? '75' : '80');
+      }
+      
+      // Add auto format parameter for modern image formats
+      if (!searchParams.has('auto')) {
+        searchParams.set('auto', 'format,compress');
       }
       
       return parsedUrl.toString();
+    }
+    
+    // For Cloudinary URLs
+    if (parsedUrl.hostname.includes('cloudinary.com')) {
+      // Extract path parts
+      const pathParts = parsedUrl.pathname.split('/');
+      
+      // Check if there's already a transformation
+      const uploadIndex = pathParts.findIndex(part => part === 'upload');
+      if (uploadIndex !== -1) {
+        const optimalWidth = width || getOptimalImageWidth();
+        const transformations = `w_${optimalWidth},c_limit,q_auto,f_auto`;
+        
+        // Check if there's already a transformation segment after 'upload'
+        if (pathParts[uploadIndex + 1]?.includes('w_') || pathParts[uploadIndex + 1]?.includes('c_')) {
+          // Replace existing transformation
+          pathParts[uploadIndex + 1] = transformations;
+        } else {
+          // Insert new transformation
+          pathParts.splice(uploadIndex + 1, 0, transformations);
+        }
+        
+        // Reconstruct URL
+        parsedUrl.pathname = pathParts.join('/');
+        return parsedUrl.toString();
+      }
     }
     
     // For Supabase Storage URLs, we could implement resize parameters if Supabase supports it

@@ -1,0 +1,130 @@
+
+/* Mobile-specific styles */
+
+/* Fix for mobile scrolling momentum */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+/* Enhance touch targets on mobile */
+@media (max-width: 768px) {
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better spacing on mobile */
+  .section {
+    padding: 2rem 1rem;
+  }
+  
+  /* Adjust font sizes for mobile */
+  h1 {
+    font-size: clamp(1.75rem, 5vw, 3.5rem);
+  }
+  
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  
+  h3 {
+    font-size: clamp(1.25rem, 3vw, 2rem);
+  }
+  
+  /* Optimize top padding on mobile */
+  body {
+    padding-top: 4rem;
+  }
+
+  /* Menu navigation styles */
+  .menu-item-fancy {
+    @apply py-3 px-3 text-lg flex items-center transition-all duration-300;
+  }
+  
+  /* Active state for touch feedback */
+  .touch-active:active {
+    @apply bg-gray-100;
+    transform: translateY(1px);
+  }
+  
+  /* Fix issues with fixed positioning on mobile */
+  .fixed-mobile {
+    position: fixed;
+    width: 100%;
+    left: 0;
+  }
+  
+  /* Fix z-index stacking in mobile menus */
+  .mobile-menu {
+    z-index: 50;
+  }
+  
+  /* Animate mobile menu */
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .animate-slide-in-right {
+    animation: slide-in-right 0.3s ease-out forwards;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+}
+
+/* Prevent horizontal scrolling */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Handle notches and safe areas on mobile */
+@supports (padding: max(0px)) {
+  .notch-padding-top {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+  
+  .notch-padding-left {
+    padding-left: max(0.5rem, env(safe-area-inset-left));
+  }
+  
+  .notch-padding-right {
+    padding-right: max(0.5rem, env(safe-area-inset-right));
+  }
+  
+  .notch-padding-bottom {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Fix for sticky hover effects on mobile */
+@media (hover: none) {
+  .hover-only {
+    display: none;
+  }
+  
+  .hover\:bg-brand-gold:hover {
+    background-color: inherit;
+  }
+}
+
+/* Remove unwanted tap highlight color on mobile */
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
