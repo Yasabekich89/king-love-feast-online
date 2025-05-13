@@ -1,2 +1,4 @@
 
-export { default as MeatTypesAdmin } from './MeatTypesAdmin';
+import MeatTypesAdmin from './MeatTypesAdmin';
+
+export default MeatTypesAdmin;
