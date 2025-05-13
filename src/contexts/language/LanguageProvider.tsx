@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+
+import React, { createContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { translations } from './translations';
 import { Language, LanguageContextType, MeatType } from './types';
@@ -11,7 +12,7 @@ export const LanguageProvider: React.FC<{children: ReactNode}> = ({ children }) 
   const [isMeatTypesLoading, setIsMeatTypesLoading] = useState(true);
 
   // Fetch meat types from Supabase
-  const fetchMeatTypes = async () => {
+  const fetchMeatTypes = useCallback(async () => {
     try {
       setIsMeatTypesLoading(true);
       const { data, error } = await supabase
@@ -30,12 +31,12 @@ export const LanguageProvider: React.FC<{children: ReactNode}> = ({ children }) 
     } finally {
       setIsMeatTypesLoading(false);
     }
-  };
+  }, []);
 
   // Load meat types on component mount
   useEffect(() => {
     fetchMeatTypes();
-  }, []);
+  }, [fetchMeatTypes]);
 
   const t = (key: string): string => {
     // Check if this is a meat type translation key
@@ -54,6 +55,9 @@ export const LanguageProvider: React.FC<{children: ReactNode}> = ({ children }) 
       if (meatType && meatType.en) {
         return meatType.en;
       }
+      
+      // If not found in our data, just use the key as a last resort
+      return meatTypeKey;
     }
     
     // Otherwise use the standard translations

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/language';
 import { Badge } from "@/components/ui/badge";
 import OptimizedImage from './OptimizedImage';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -28,7 +28,7 @@ const MenuCard: React.FC<MenuItemProps> = ({
   priceKey,
   isPopular = false,
 }) => {
-  const { t } = useLanguage();
+  const { t, meatTypes, language } = useLanguage();
   
   // Generate spice indicators
   const renderSpiceLevel = () => {
@@ -39,6 +39,20 @@ const MenuCard: React.FC<MenuItemProps> = ({
       );
     }
     return levels;
+  };
+
+  // Helper function to get the translated meat type
+  const getMeatTypeTranslation = (typeKey: string) => {
+    // First try to find the meat type in our database
+    const meatType = meatTypes.find(type => type.key === typeKey);
+    
+    if (meatType) {
+      // Use the translation for the current language, fallback to English or key
+      return meatType[language] || meatType.en || typeKey;
+    }
+    
+    // If not found in our meatTypes, fallback to the translation system
+    return t(`menu.meatType.${typeKey}`);
   };
 
   return (
@@ -82,12 +96,12 @@ const MenuCard: React.FC<MenuItemProps> = ({
             {Array.isArray(meatType) ? (
               meatType.map((type, index) => (
                 <Badge key={index} variant="outline" className="text-xs border-brand-gold text-brand-blue">
-                  {t(`menu.meatType.${type}`)}
+                  {getMeatTypeTranslation(type)}
                 </Badge>
               ))
             ) : (
               <Badge variant="outline" className="text-xs border-brand-gold text-brand-blue">
-                {t(`menu.meatType.${meatType}`)}
+                {getMeatTypeTranslation(meatType as string)}
               </Badge>
             )}
           </div>

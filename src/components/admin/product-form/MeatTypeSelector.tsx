@@ -1,13 +1,34 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLanguage } from '@/contexts/language';
 import { Checkbox } from '@/components/ui/checkbox';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useFormContext } from 'react-hook-form';
 
 const MeatTypeSelector = () => {
-  const { meatTypes, language } = useLanguage();
+  const { meatTypes, language, refreshMeatTypes, isMeatTypesLoading } = useLanguage();
   const form = useFormContext();
+
+  // Refresh meat types when component mounts to ensure we have the latest data
+  useEffect(() => {
+    refreshMeatTypes();
+  }, [refreshMeatTypes]);
+
+  if (isMeatTypesLoading) {
+    return (
+      <div className="flex items-center justify-center py-4">
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-brand-gold"></div>
+      </div>
+    );
+  }
+
+  if (meatTypes.length === 0) {
+    return (
+      <div className="p-4 border border-yellow-200 bg-yellow-50 rounded-md">
+        <p className="text-yellow-700">No meat types available. Please add meat types in the admin panel first.</p>
+      </div>
+    );
+  }
 
   return (
     <FormField
@@ -42,7 +63,7 @@ const MeatTypeSelector = () => {
                         />
                       </FormControl>
                       <FormLabel className="text-sm font-normal cursor-pointer">
-                        {type[language] || type.en}
+                        {type[language] || type.en || type.key}
                       </FormLabel>
                     </FormItem>
                   );
