@@ -1,4 +1,3 @@
-
 import "./App.css";
 import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
@@ -21,7 +20,7 @@ const About = lazy(() => import("./pages/About"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const AdminProducts = lazy(() => import("./pages/admin/AdminProducts"));
-const MeatTypesAdmin = lazy(() => import("./pages/admin/MeatTypesAdmin"));
+const MeatTypesAdmin = lazy(() => import("./pages/admin/meat-types"));
 const AboutContentAdmin = lazy(() => import("./pages/admin/AboutContentAdmin"));
 
 const queryClient = new QueryClient({
