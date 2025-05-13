@@ -1,30 +1,60 @@
 
+import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
-import { ContainerScroll, BentoGrid, BentoCell, ContainerScale } from "@/components/ui/hero-gallery-scroll-animation";
 import { Button } from "@/components/ui/button";
 import { Crown } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { letterVariants } from '@/lib/animation-variants';
-import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { letterVariants, fadeIn } from '@/lib/animation-variants';
 import { supabase } from '@/integrations/supabase/client';
-import { getOptimizedImageUrl } from '@/utils/performance-utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import OptimizedImage from '@/components/OptimizedImage';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { getOptimizedImageUrl } from '@/utils/performance-utils';
 
-// Premium meat images for the restaurant
-const MEAT_IMAGES = ["https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?q=80&w=1280&auto=format&fit=crop", "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=1280&auto=format&fit=crop", "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=1280&auto=format&fit=crop", "https://images.unsplash.com/photo-1602632032171-5cd51d27d50e?q=80&w=1280&auto=format&fit=crop", "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?q=80&w=1280&auto=format&fit=crop"];
+// Fallback premium meat images if database is empty
+const FALLBACK_IMAGES = [
+  "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?q=80&w=1280&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=1280&auto=format&fit=crop", 
+  "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?q=80&w=1280&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1602632032171-5cd51d27d50e?q=80&w=1280&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?q=80&w=1280&auto=format&fit=crop"
+];
 
 const HeroGallerySection: React.FC = () => {
   const { t, language } = useLanguage();
   const [productImages, setProductImages] = useState<string[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
   const isMobile = useIsMobile();
+  
+  // Create particles for the background effect
+  const particles = Array.from({ length: 20 }).map((_, i) => ({
+    id: i,
+    size: Math.random() * 8 + 4,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    duration: Math.random() * 15 + 10,
+    delay: Math.random() * 5
+  }));
 
   // Fetch product images on component mount
   useEffect(() => {
     const fetchProductImages = async () => {
-      const { data, error } = await supabase.from('products').select('image_src').not('image_src', 'is', null);
+      const { data, error } = await supabase
+        .from('products')
+        .select('image_src')
+        .not('image_src', 'is', null);
+      
       if (error) {
         console.error('Error fetching product images:', error);
+        setProductImages(FALLBACK_IMAGES);
         return;
       }
 
@@ -36,29 +66,57 @@ const HeroGallerySection: React.FC = () => {
         // Shuffle array and take the first 5
         const shuffled = [...images].sort(() => 0.5 - Math.random());
         // Generate optimized URLs for these images
-        const optimizedImages = shuffled.slice(0, 5).map(img => getOptimizedImageUrl(img, isMobile ? 640 : 1280));
+        const optimizedImages = shuffled.slice(0, 5).map(img => 
+          getOptimizedImageUrl(img, isMobile ? 640 : 1280));
+        setProductImages(optimizedImages);
+      } else if (images.length > 0) {
+        // If we have fewer than 5 images but more than 0, use what we have
+        const optimizedImages = images.map(img => 
+          getOptimizedImageUrl(img, isMobile ? 640 : 1280));
         setProductImages(optimizedImages);
       } else {
-        // If we have fewer than 5 images, use what we have
-        const optimizedImages = images.map(img => getOptimizedImageUrl(img, isMobile ? 640 : 1280));
-        setProductImages(optimizedImages);
+        // Use fallback images if no results
+        setProductImages(FALLBACK_IMAGES);
       }
     };
     fetchProductImages();
   }, [isMobile]);
 
-  // Create an array of letters for text animation
-  const titleText = t('hero.title');
+  // Auto-advance carousel
+  useEffect(() => {
+    if (!autoplay || productImages.length === 0) return;
+    
+    const interval = setInterval(() => {
+      setActiveIndex((current) => (current + 1) % productImages.length);
+    }, 4000);
+    
+    return () => clearInterval(interval);
+  }, [autoplay, productImages.length]);
+
+  // Pause autoplay when user interacts with carousel
+  const handleManualNavigation = () => {
+    setAutoplay(false);
+    // Resume autoplay after 10 seconds of inactivity
+    setTimeout(() => setAutoplay(true), 10000);
+  };
 
   // Handle Armenian title formatting
   const renderTitle = () => {
+    const titleText = t('hero.title');
+    
     if (language === 'am') {
       // Split Armenian title into words and display each on a new line
       const titleWords = titleText.split(" ");
       return (
         <h1 className="max-w-xl text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter text-white font-serif">
           {titleWords.map((word, wordIndex) => (
-            <div key={wordIndex} className="block">
+            <motion.div 
+              key={wordIndex} 
+              className="block"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: wordIndex * 0.2 + 0.3 }}
+            >
               {word.split('').map((letter, letterIndex) => (
                 <motion.span 
                   key={letterIndex} 
@@ -74,110 +132,232 @@ const HeroGallerySection: React.FC = () => {
                   {letter === ' ' ? '\u00A0' : letter}
                 </motion.span>
               ))}
-            </div>
+            </motion.div>
           ))}
         </h1>
       );
     } else {
-      // For other languages, keep the original implementation
-      const titleLetters = titleText.split("");
+      // For other languages, animate the entire title
       return (
-        <h1 className="max-w-xl text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter text-white font-serif">
-          {titleLetters.map((letter, index) => (
-            <motion.span 
-              key={index} 
-              variants={letterVariants} 
-              initial="hidden" 
-              animate="visible" 
-              className="inline-block" 
-              style={{
-                textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-                animationDelay: `${index * 0.05}s`
-              }}
-            >
-              {letter === ' ' ? '\u00A0' : letter}
-            </motion.span>
-          ))}
-        </h1>
+        <motion.h1 
+          className="max-w-xl text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter text-white font-serif"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.7 }}
+        >
+          {titleText}
+        </motion.h1>
       );
     }
   };
 
   return (
-    <ContainerScroll className="h-[350vh]">
-      <BentoGrid className="sticky left-0 top-0 z-0 h-screen w-full p-4 bg-state-950/50">
-        {productImages.length > 0 ?
-          // Display fetched product images
-          productImages.map((imageUrl, index) => (
-            <BentoCell key={index} className="overflow-hidden rounded-xl shadow-xl border border-brand-gold/20">
-              <div className="relative w-full h-full">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-                <img 
-                  className="size-full object-cover object-center" 
-                  src={imageUrl} 
-                  alt="Premium Dish" 
-                  loading={index < 2 ? 'eager' : 'lazy'} 
-                  width={isMobile ? 640 : 1280}
-                  height={isMobile ? 480 : 720}
-                />
-              </div>
-            </BentoCell>
-          )) :
-          // Fallback placeholders while images are loading
-          Array(5).fill(0).map((_, index) => (
-            <BentoCell key={index} className="overflow-hidden rounded-xl shadow-xl border border-brand-gold/20 bg-gray-800">
-              <div className="relative w-full h-full">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-              </div>
-            </BentoCell>
-          ))
-        }
-      </BentoGrid>
+    <section className="relative min-h-[80vh] md:min-h-[90vh] flex items-center overflow-hidden">
+      {/* Background particles */}
+      <div className="absolute inset-0 overflow-hidden z-0">
+        <div className="absolute inset-0 bg-black/80 z-10" />
+        
+        {/* Animated gold particles */}
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="absolute rounded-full bg-brand-gold/30"
+            style={{
+              width: particle.size,
+              height: particle.size,
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.3, 0.7, 0.3],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: particle.duration,
+              delay: particle.delay,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </div>
 
-      <ContainerScale className="relative z-10 text-center px-4">
-        <Crown className="mx-auto text-brand-gold mb-4 sm:mb-6" size={isMobile ? 40 : 60} />
-        
-        {renderTitle()}
-        
-        <motion.div 
-          className="gold-divider mx-auto" 
-          initial={{ width: 0 }} 
-          animate={{ width: 60 }} 
-          transition={{ delay: 1, duration: 0.5 }} 
-        />
-        
-        <p className="my-4 sm:my-6 max-w-xl mx-auto text-sm sm:text-base md:text-xl text-white opacity-90">
-          {t('hero.subtitle')}
-        </p>
-        
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button 
-            asChild 
-            className="royal-btn w-full sm:w-auto bg-brand-gold hover:bg-brand-blue text-white border-2 border-brand-gold hover:border-brand-blue transition-all duration-300 text-base sm:text-lg px-4 sm:px-6 py-3 sm:py-4 rounded-md shadow-lg relative overflow-hidden group"
-          >
-            <Link to="/reservations">
-              <motion.span 
-                className="absolute inset-0 bg-white/20 transform origin-left" 
-                initial={{ scaleX: 0 }} 
-                whileHover={{ scaleX: 1 }} 
-                transition={{ duration: 0.6 }} 
+      {/* Main content */}
+      <div className="container mx-auto px-4 relative z-20 py-12 md:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          {/* Image carousel */}
+          <div className="order-2 lg:order-1">
+            <div className="relative perspective-lg">
+              {productImages.length > 0 ? (
+                <Carousel 
+                  className="w-full max-w-md mx-auto"
+                  onMouseEnter={() => setAutoplay(false)}
+                  onMouseLeave={() => setAutoplay(true)}
+                >
+                  <CarouselContent>
+                    {productImages.map((imageUrl, index) => (
+                      <CarouselItem key={index}>
+                        <AnimatePresence mode="wait">
+                          <motion.div 
+                            className="aspect-[4/3] overflow-hidden rounded-xl border-2 border-brand-gold/30 shine-effect shadow-2xl"
+                            initial={{ rotateY: 90, opacity: 0 }}
+                            animate={{ rotateY: 0, opacity: 1 }}
+                            exit={{ rotateY: -90, opacity: 0 }}
+                            transition={{ duration: 0.6 }}
+                          >
+                            <OptimizedImage 
+                              src={imageUrl} 
+                              alt="Premium Dish" 
+                              className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-110" 
+                              priority={index < 2} 
+                            />
+                            <motion.div 
+                              className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.3 }}
+                            />
+                          </motion.div>
+                        </AnimatePresence>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious 
+                    onClick={handleManualNavigation}
+                    className="hidden sm:flex bg-brand-gold/20 text-white hover:bg-brand-gold/50 border-brand-gold/40"
+                  />
+                  <CarouselNext 
+                    onClick={handleManualNavigation}
+                    className="hidden sm:flex bg-brand-gold/20 text-white hover:bg-brand-gold/50 border-brand-gold/40"
+                  />
+                </Carousel>
+              ) : (
+                // Loading placeholder
+                <div className="aspect-[4/3] max-w-md mx-auto bg-gray-800 animate-pulse rounded-xl"></div>
+              )}
+              
+              {/* Decorative elements */}
+              <motion.div
+                className="absolute -bottom-4 -left-4 size-16 md:size-24 border-2 border-brand-gold/30 rounded-md z-[-1]"
+                animate={{ rotate: 15, scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 5, repeat: Infinity }}
               />
-              <span className="relative z-10">{t('hero.cta')}</span>
-            </Link>
-          </Button>
+              <motion.div
+                className="absolute -top-4 -right-4 size-16 md:size-24 border-2 border-brand-gold/30 rounded-md z-[-1]"
+                animate={{ rotate: -15, scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+              />
+            </div>
+          </div>
           
-          <Button 
-            asChild 
-            variant="link" 
-            className="bg-transparent px-4 py-2 font-medium text-white hover:text-brand-gold mt-2 sm:mt-0"
-          >
-            <Link to="/menu">
-              {t('nav.menu')}
-            </Link>
-          </Button>
+          {/* Text content */}
+          <div className="order-1 lg:order-2 text-center lg:text-left">
+            <motion.div
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+            >
+              <Crown className="mx-auto lg:mx-0 text-brand-gold mb-6" size={isMobile ? 40 : 60} />
+            </motion.div>
+            
+            {renderTitle()}
+            
+            <motion.div 
+              className="gold-divider mx-auto lg:mx-0" 
+              initial={{ width: 0 }} 
+              animate={{ width: 60 }} 
+              transition={{ delay: 0.8, duration: 0.5 }} 
+            />
+            
+            <motion.p 
+              className="my-4 sm:my-6 max-w-xl mx-auto lg:mx-0 text-sm sm:text-base md:text-xl text-white opacity-90"
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 1.1 }}
+            >
+              {t('hero.subtitle')}
+            </motion.p>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-8">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.4, type: "spring", stiffness: 100 }}
+                className="w-full sm:w-auto"
+              >
+                <Button 
+                  asChild
+                  className="royal-btn w-full sm:w-auto bg-brand-gold hover:bg-brand-blue text-white border-2 border-brand-gold hover:border-brand-blue transition-all duration-300 text-base sm:text-lg px-6 py-3 sm:py-4 rounded-md shadow-lg relative overflow-hidden group animate-pulse-gold"
+                >
+                  <Link to="/reservations">
+                    <motion.span 
+                      className="absolute inset-0 bg-white/20 transform origin-left" 
+                      initial={{ scaleX: 0 }} 
+                      whileHover={{ scaleX: 1 }} 
+                      transition={{ duration: 0.6 }} 
+                    />
+                    <span className="relative z-10">{t('hero.cta')}</span>
+                  </Link>
+                </Button>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.6 }}
+              >
+                <Button 
+                  asChild 
+                  variant="link" 
+                  className="bg-transparent px-4 py-2 font-medium text-white hover:text-brand-gold"
+                >
+                  <Link to="/menu">
+                    {t('nav.menu')}
+                  </Link>
+                </Button>
+              </motion.div>
+            </div>
+          </div>
         </div>
-      </ContainerScale>
-    </ContainerScroll>
+      </div>
+      
+      {/* Decorative elements floating in the background */}
+      <motion.div
+        className="absolute bottom-10 left-5 md:left-20 text-brand-gold/60"
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: 1, 
+          y: [0, -15, 0],
+        }}
+        transition={{ 
+          delay: 1.8,
+          duration: 3, 
+          repeat: Infinity,
+          repeatType: "reverse"
+        }}
+      >
+        <Crown size={30} />
+      </motion.div>
+      
+      <motion.div
+        className="absolute top-20 right-5 md:right-20 text-brand-gold/60"
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: 1, 
+          y: [0, 15, 0],
+        }}
+        transition={{ 
+          delay: 2,
+          duration: 4, 
+          repeat: Infinity,
+          repeatType: "reverse"
+        }}
+      >
+        <Crown size={20} />
+      </motion.div>
+    </section>
   );
 };
 
