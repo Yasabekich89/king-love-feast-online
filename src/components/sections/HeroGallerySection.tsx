@@ -112,7 +112,7 @@ const HeroGallerySection: React.FC = () => {
           {titleWords.map((word, wordIndex) => (
             <motion.div 
               key={wordIndex} 
-              className="block"
+              className="block text-center lg:text-left"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: wordIndex * 0.2 + 0.3 }}
@@ -140,7 +140,7 @@ const HeroGallerySection: React.FC = () => {
       // For other languages, animate the entire title
       return (
         <motion.h1 
-          className="max-w-xl text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter text-white font-serif"
+          className="max-w-xl text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter text-white font-serif text-center lg:text-left"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.7 }}
@@ -257,8 +257,9 @@ const HeroGallerySection: React.FC = () => {
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+              className="flex justify-center lg:justify-start"
             >
-              <Crown className="mx-auto lg:mx-0 text-brand-gold mb-6" size={isMobile ? 40 : 60} />
+              <Crown className="text-brand-gold mb-6" size={isMobile ? 40 : 60} />
             </motion.div>
             
             {renderTitle()}
@@ -271,7 +272,7 @@ const HeroGallerySection: React.FC = () => {
             />
             
             <motion.p 
-              className="my-4 sm:my-6 max-w-xl mx-auto lg:mx-0 text-sm sm:text-base md:text-xl text-white opacity-90"
+              className="my-4 sm:my-6 max-w-xl mx-auto lg:mx-0 text-sm sm:text-base md:text-xl text-white opacity-90 text-center lg:text-left"
               variants={fadeIn}
               initial="hidden"
               animate="visible"

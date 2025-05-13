@@ -123,6 +123,18 @@
   animation: pulse-gold 1.5s infinite;
 }
 
+/* Text alignment helpers for responsive design */
+@media (max-width: 1024px) {
+  .text-center-mobile {
+    text-align: center !important;
+  }
+  
+  .mx-auto-mobile {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
 /* New 3D and carousel animations */
 @keyframes rotate-3d {
   0% { transform: perspective(1000px) rotateY(0deg); }
